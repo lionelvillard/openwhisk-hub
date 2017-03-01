@@ -1,0 +1,60 @@
+package:
+  name: openwhisk-registry
+  version: 0.0.1
+  description: Experimental OpenWhisk Registry
+  license: Apache-2.0
+  repositories:
+  - url: http://github.com/lionelvillard/openwhisk-hub
+  dependencies: {}
+  function: ""
+  package_credential: ""
+  namespace: ""
+  credential: ""
+  actions:
+    init:
+      version: ""
+      location: ""
+      runtime: nodejs:6
+      namespace: ""
+      credential: ""
+      inputs: {}
+      outputs: {}
+      name: init
+      annotations: {}
+    publish:
+      version: ""
+      location: ""
+      runtime: nodejs:6
+      namespace: ""
+      credential: ""
+      inputs: {}
+      outputs: {}
+      name: publish
+      annotations: {}
+    search:
+      version: ""
+      location: ""
+      runtime: nodejs:6
+      namespace: ""
+      credential: ""
+      inputs: {}
+      outputs: {}
+      name: search
+      annotations: {}
+    search-ui:
+      version: ""
+      location: ""
+      runtime: nodejs:6
+      namespace: ""
+      credential: ""
+      inputs: {}
+      outputs: {}
+      name: search-ui
+      annotations: {}
+  triggers: {}
+  feeds: {}
+  rules: {}
+  inputs: {}
+  sequences: {}
+  annotations: {}
+filepath: ""

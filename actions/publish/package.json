@@ -1,0 +1,23 @@
+{
+  "name": "openwhisk-registry-publish",
+  "version": "0.0.1",
+  "description": "OpenWhisk Package Registry Publish Command",
+  "main": "publish.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "openwhisk",
+    "whisk",
+    "package",
+    "registry",
+    "deploy",
+    "publish"
+  ],
+  "author": "Lionel Villard",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "js-yaml": "^3.8.1",
+    "openwhisk": "^3.3.0"
+  }
+}
