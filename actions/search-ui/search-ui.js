@@ -16,9 +16,9 @@
 
 /* Return main search page */
 function main(args) {
-  let host = process.env['__OW_API_HOST'];
-  let ns = process.env['__OW_NAMESPACE'];
-  let searchAction = (args.domain || `${host}/api/v1/experimental/web/${ns}`) + '/owr/search.html';
+//  let host = process.env['__OW_API_HOST'];
+//  let ns = process.env['__OW_NAMESPACE'];
+  //let searchAction = (args.domain || `${host}/api/v1/experimental/web/${ns}`) + '/owr/search.html';
 
   var html = `<!DOCTYPE html>
   <html lang="en">
@@ -35,11 +35,12 @@ function main(args) {
            height: 45px;
            background-color: #f5f5f5;
         }
-        .vcenter {
+        .entry {
           display: inline-block;
           vertical-align: top;
           float: none;
           height: 180px;
+          width: 300px;
         }
         .etitle {
           font-size:18px;
@@ -50,10 +51,23 @@ function main(args) {
           padding-bottom:20px;
           height:70px;
         }
-
+        .hvr-glow {
+          display: inline-block;
+          vertical-align: middle;
+          -webkit-transform: perspective(1px) translateZ(0);
+          transform: perspective(1px) translateZ(0);
+          box-shadow: 0 0 1px transparent;
+          -webkit-transition-duration: 0.3s;
+          transition-duration: 0.3s;
+          -webkit-transition-property: box-shadow;
+          transition-property: box-shadow;
+        }
+        .hvr-glow:hover, .hvr-glow:focus, .hvr-glow:active {
+          box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
+        }
       </style>
     </head>
-    <body style="padding-top:20px">
+    <body style="padding-top:20px;font-family:Roboto;font-weight:300">
       <div class="container">
         <h2 class="text-center" style="padding-bottom:20px;font-family:Roboto;font-weight:300;font-size:45px">OpenWhisk Hub</h2>
         <form id="searchform" onsubmit="search(); return false">
@@ -62,12 +76,12 @@ function main(args) {
                    type="text"
                    name="text"
                    maxlength="1024"
-                   placeholder="enter keywords and click search"
+                   placeholder="enter keywords to search for OpenWhisk packages"
                    value=""/>
             <button id="searchsubmit" type="button" class="btn btn-primary glyphicon glyphicon-search" style="float:right;left:-10px"></button>
           </div>
         </form>
-        <div style="clear:left;padding-top:40px;font-family:Roboto;font-weight:300" id="searchresult" class="list-group">
+        <div style="clear:left;padding-top:40px" id="searchresult" class="list-group">
 
         </div>
         <footer class="footer">
@@ -86,14 +100,43 @@ function main(args) {
         $("#searchsubmit").click(function() {
           search();
         })
-        function search() {
-          var txt = $("#searchtext").val().trim();
+
+        function searchKeywords(keywords) {
+          var txt = keywords.trim();
           if (last != txt) {
              last = txt;
 
-             $("#searchresult").load("${searchAction}?keywords="+last);
+             $("#searchresult").load("search.html?keywords="+last);
           }
         }
+
+        function search() {
+          searchKeywords($("#searchtext").val());
+        }
+
+        function getUrlVars() {
+          var vars = [], hash;
+          var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+          for(var i = 0; i < hashes.length; i++)
+          {
+            hash = hashes[i].split('=');
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+          }
+          return vars;
+        }
+
+        function onLoadSearch() {
+          var vars = getUrlVars();
+          if (vars && vars.keywords) {
+            var keywords = decodeURIComponent(vars.keywords);
+
+            $("#searchtext").value = keywords;
+            searchKeywords(keywords);
+          }
+        }
+
+         window.onload = onLoadSearch;
       </script>
     </body>
   </html>`;

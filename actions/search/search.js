@@ -24,6 +24,7 @@
      keywords   space-separated list of keywords
 */
 var openwhisk = require('openwhisk');
+var url = require('url');
 
 function main(args) {
   let ow = openwhisk();
@@ -35,6 +36,8 @@ function main(args) {
 
   return ow.actions.invoke({actionName:'/whisk.system/cloudant/exec-query-search', params, blocking:true}).then( result => {
     let rows = result.response.result.rows;
+    console.log(rows);
+
     let html = "";
     for (var i in rows) {
       let name = rows[i].doc._id.trim();
@@ -48,15 +51,26 @@ function main(args) {
         desc = desc.substring(0, 100);
         desc += '...';
       }
-      let repo = rows[i].doc.repo;
+
+      let fullrepo = rows[i].doc.repo;
+      fullrepo = 'https://github.com/openwhisk/openwhisk2';
+      let owner = 'openwhisk', repo = 'openwhisk';
+      if (fullrepo) {
+        let path = url.parse(fullrepo).path.split('/');
+        console.log(path);
+        owner = path[path.length - 2];
+        repo = path[path.length - 1];
+        console.log(owner);
+        console.log(repo);
+      }
 
       html += `
-          <div class="list-group-item well container vcenter" style="width:300px">
-            <div class="row">
+          <div class="list-group-item well container entry hvr-glow">
+            <div class="row" onclick="location.href='../show/show.html?owner=${owner}&repo=${repo}'">
               <div class="text-center" style="font-size:18px;font-weight:500;padding-bottom:15px">${name}</div>
               <div class="text-center edesc">${desc}</div>`;
-      if (repo) {
-        html += `<div><a href="${repo}" class="btn btn-outline"><span class="fa fa-github" style="font-size:20px;"></span> View on GitHub</a></div>`;
+      if (fullrepo) {
+        html += `<div><a href="${fullrepo}" class="btn btn-outline"><span class="fa fa-github" style="font-size:20px;"></span> View on GitHub</a></div>`;
       }
       html += '</div></div>';
     }

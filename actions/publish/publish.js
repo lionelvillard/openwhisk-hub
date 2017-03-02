@@ -16,7 +16,7 @@
 
 
 /*
-   Publish OpenWhisk Package to the given registry
+   Publish an OpenWhisk Package to the given registry
 
    Input:
      host       where the cloudant service is located
@@ -26,57 +26,63 @@
     or
      url
 
-     manifest   the manifest file (as string value)
+
+     owner      github owner
+     repo       github repository
 */
 
 var openwhisk = require('openwhisk');
+var GitHubApi = require('github');
 
 function main(args) {
-  var yaml = require('js-yaml');
-  // Read manifest and assemble cloudant document.
-  var manifest;
-  try {
-    manifest = yaml.safeLoad(args.manifest);
-  } catch (e) {
-    return Promise.reject({"error":e});
-  }
-
   var ow = openwhisk();
-  var doc = {
-    _id: manifest.package.name,
-    description: manifest.package.description,
-    version: manifest.package.version,
-    repositories: manifest.package.repositories
-  };
 
-  var p = getRevision(ow, args, doc);
-  p = p.then( result => updateDocument(ow, args, result.response.result, doc) );
-  p = p.then( result => Promise.resolve({ updated: true }));
-  p = p.catch( err => createDocument(ow, args, doc) );
+  var github = new GitHubApi({
+    //debug: true
+  });
+
+  var p = github.repos.get({owner: args.owner, repo: args.repo});
+  p = p.then( repo => {
+    var data = repo.data;
+
+    var rev = getRevision(ow, args, data)
+    rev = rev.then( result => updateEntry(ow, args, result.response.result, data) );
+    rev = rev.then( result => Promise.resolve({ updated: true }));
+    return rev.catch( err => register(ow, args, data) );
+  });
   return p;
 }
 
-function getRevision(ow, args, doc) {
-  console.log(`get revision ${doc._id}`);
+function getRevision(ow, args, repo) {
+  //console.log(`get revision ${repo.full_name}`);
   let params = args;
-  params.docid = doc._id;
+  params.docid = repo.full_name;
   return ow.actions.invoke({actionName:'/whisk.system/cloudant/read-document', params, blocking:true});
 }
 
-function updateDocument(ow, args, olddoc, doc) {
-  doc._rev = olddoc._rev;
+function updateEntry(ow, args, olddoc, repo) {
+  //console.log(`update entry ${repo.full_name}`);
   let params = args;
-  params.doc = doc;
+  params.doc = makeEntry(repo);
+  params.doc._rev = olddoc._rev;
 
-  return ow.actions.invoke({actionName:'/whisk.system/cloudant/update-document', params, blocking:true});
+  return ow.actions.invoke({actionName:'/whisk.system/cloudant/update-document', params, blocking:true}).catch( err => { error: err });
 }
 
-function createDocument(ow, args, doc) {
-  console.log(`createDocument ${doc._id}`);
+function register(ow, args, repo) {
+  //console.log(`register ${repo.full_name}`);
   let params = args;
-  params.doc = doc;
+  params.doc = makeEntry(repo);
 
-  return ow.actions.invoke({actionName:'/whisk.system/cloudant/create-document', params, blocking:true});
+  return ow.actions.invoke({actionName:'/whisk.system/cloudant/create-document', params, blocking:true}).catch( err => { error: err });
+}
+
+function makeEntry(repo) {
+  return {
+    _id: repo.full_name,
+    description: repo.description,
+    repository: repo.html_url
+  };
 }
 
 exports.main = main;
