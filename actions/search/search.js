@@ -32,14 +32,13 @@ function main(args) {
   let params = args;
   params.docid = 'keywords';
   params.indexname = 'searchKeywords';
-  params.search = {q: args.keywords, include_docs: true};
+  params.search = {q: makeQuery(args.keywords), include_docs: true};
 
   return ow.actions.invoke({actionName:'/whisk.system/cloudant/exec-query-search', params, blocking:true}).then( result => {
     let rows = result.response.result.rows;
-    console.log(rows);
 
     let html = "";
-    for (var i in rows) {
+    for (var i = 0; i < rows.length; i++) {
       let name = rows[i].doc._id.trim();
       if (name.length > 30) {
         name = name.substring(0, 30);
@@ -53,20 +52,16 @@ function main(args) {
       }
 
       let fullrepo = rows[i].doc.repo;
-      fullrepo = 'https://github.com/openwhisk/openwhisk2';
       let owner = 'openwhisk', repo = 'openwhisk';
       if (fullrepo) {
         let path = url.parse(fullrepo).path.split('/');
-        console.log(path);
         owner = path[path.length - 2];
         repo = path[path.length - 1];
-        console.log(owner);
-        console.log(repo);
       }
 
       html += `
-          <div class="list-group-item well container entry hvr-glow">
-            <div class="row" onclick="location.href='../show/show.html?owner=${owner}&repo=${repo}'">
+          <div class="list-group-item well container hvr-glow entry">
+            <div class="row" onclick="location.href='show.html?owner=${owner}&repo=${repo}'">
               <div class="text-center" style="font-size:18px;font-weight:500;padding-bottom:15px">${name}</div>
               <div class="text-center edesc">${desc}</div>`;
       if (fullrepo) {
@@ -76,6 +71,22 @@ function main(args) {
     }
     return Promise.resolve({html:html});
   });
+}
+
+function makeQuery(keywords) {
+  let query = '';
+  let kws = keywords.trim().split(/[ ]+/);
+  for (let i = 0; i < kws.length; i++) {
+    if (i > 0)
+      query += ' OR ';
+    if (kws[i] === 'OR' || kws[i] === 'AND' || kws[i] === 'NOT')
+      query += '\\\\';
+    else if (kws[i] === '*')
+      query += '*:';
+
+    query += kws[i];
+  }
+  return query;
 }
 
 exports.main = main;

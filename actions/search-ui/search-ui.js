@@ -53,7 +53,6 @@ function main(args) {
         }
         .hvr-glow {
           display: inline-block;
-          vertical-align: middle;
           -webkit-transform: perspective(1px) translateZ(0);
           transform: perspective(1px) translateZ(0);
           box-shadow: 0 0 1px transparent;
@@ -106,7 +105,7 @@ function main(args) {
           if (last != txt) {
              last = txt;
 
-             $("#searchresult").load("search.html?keywords="+last);
+             $("#searchresult").load("search.html?keywords="+encodeURIComponent(last));
           }
         }
 
