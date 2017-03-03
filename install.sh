@@ -6,3 +6,4 @@ cd actions/publish && zip -r publish.zip * && wsk action update owr/publish publ
 cd actions/search && wsk action update owr/search search.js -P ../../db.json -a web-export true && cd ../..
 cd actions/search-ui && wsk action update owr/search-ui search-ui.js -a web-export true && cd ../..
 cd actions/show &&  zip -r show.zip * && wsk action update owr/show show.zip --kind nodejs:6 -a web-export true && cd ../..
+cd actions/release && wsk action update owr/release release.zip && cd ../..
