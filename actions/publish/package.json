@@ -16,8 +16,7 @@
   ],
   "author": "Lionel Villard",
   "license": "Apache-2.0",
-  "dependencies": {
-    "github": "^9.1.0",
+  "dependencies": { 
     "openwhisk": "^3.3.0"
   }
 }

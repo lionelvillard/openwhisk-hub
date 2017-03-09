@@ -1,6 +1,4 @@
 {
-  "username": "XXX",
-  "password": "YYY",
-  "host": "ZZZ.cloudant.com",
+  "dburl": "XXX",
   "dbname": "openwhisk"
 }

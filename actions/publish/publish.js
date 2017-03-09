@@ -15,74 +15,120 @@
  */
 
 
+var openwhisk = require('openwhisk');
+
 /*
-   Publish an OpenWhisk Package to the given registry
+   Publish or update an OpenWhisk Package to the OpenWhisk registry.
 
-   Input:
-     host       where the cloudant service is located
-     username
-     password
-     dbname
-    or
-     url
-
-
-     owner      github owner
-     repo       github repository
+   @param {string} args.dburl    where the cloudant service hosting the registry is located
+   @param {string} [args.dbname] the Cloudant db name
+   @param {string} args.owner    github owner
+   @param {string} args.repo     github repository name
 */
 
-var openwhisk = require('openwhisk');
-var GitHubApi = require('github');
-
 function main(args) {
-  var ow = openwhisk();
+  if (!args.hasOwnProperty('dburl'))
+    return { error: "Missing argument 'dburl'" };
 
-  var github = new GitHubApi({
-    //debug: true
-  });
+  if (!args.hasOwnProperty('owner'))
+   return { error: "Missing argument 'owner' identifying the github repository owner." };
 
-  var p = github.repos.get({owner: args.owner, repo: args.repo});
-  p = p.then( repo => {
-    var data = repo.data;
+  if (!args.hasOwnProperty('repo'))
+    return { error: "Missing argument 'repo' identifying the github repository name." };
 
-    var rev = getRevision(ow, args, data)
-    rev = rev.then( result => updateEntry(ow, args, result.response.result, data) );
-    rev = rev.then( result => Promise.resolve({ updated: true }));
-    return rev.catch( err => register(ow, args, data) );
-  });
-  return p;
+  args.url = args.dburl;
+  //
+  // let options = {
+  //   apihost: 'openwhisk.ng.bluemix.net',
+  //   api_key: '...'
+  // }
+  let ow = extendOpenWhisk(openwhisk());
+
+  return getRepo(ow, args.owner, args.repo)
+        .then(registerOrUpdate(ow, args));
 }
 
-function getRevision(ow, args, repo) {
-  //console.log(`get revision ${repo.full_name}`);
-  let params = args;
-  params.docid = repo.full_name;
-  return ow.actions.invoke({actionName:'/whisk.system/cloudant/read-document', params, blocking:true});
+// Fetch repository info.
+var getRepo = (ow, owner, repo) => {
+  return ow.actions.call(
+    {
+      actionName: '/villard@us.ibm.com_dev/github/getRepo',
+      params: {
+        owner     : owner,
+        repo      : repo,
+        userAgent : 'OpenWhisk'
+      }
+    });
 }
 
-function updateEntry(ow, args, olddoc, repo) {
-  //console.log(`update entry ${repo.full_name}`);
-  let params = args;
-  params.doc = makeEntry(repo);
-  params.doc._rev = olddoc._rev;
+var registerOrUpdate = (ow, args) => response => {
+  console.log('registerOrUpdate');
 
-  return ow.actions.invoke({actionName:'/whisk.system/cloudant/update-document', params, blocking:true}).catch( err => { error: err });
-}
 
-function register(ow, args, repo) {
-  //console.log(`register ${repo.full_name}`);
-  let params = args;
-  params.doc = makeEntry(repo);
+  if (response.hasOwnProperty('error'))
+    throw `Error: GitHub repository ${args.owner}/${args.repo} does not exist.`;
 
-  return ow.actions.invoke({actionName:'/whisk.system/cloudant/create-document', params, blocking:true}).catch( err => { error: err });
-}
+  let repo = response.body;
 
-function makeEntry(repo) {
-  return {
+  let dbentry = {
     _id: repo.full_name,
     description: repo.description,
     repository: repo.html_url
   };
+
+  return getRevision(ow, args, repo)
+          .then(updateEntry(ow, args, repo, dbentry))
+          .then( () => ({ html: 'success' }))
+        .catch(noRevision(ow, args, repo, dbentry));
+}
+
+var getRevision = (ow, params, repo) => {
+  console.log('getRevision');
+
+  params.docid = repo.full_name;
+  return ow.actions.unsafeCall({actionName:'/whisk.system/cloudant/read-document', params});
+}
+
+var updateEntry = (ow, params, repo, entry) => olddoc => {
+  params.doc = entry;
+  params.doc._rev = olddoc._rev;
+  console.log('updateEntry');
+  return ow.actions.call({actionName:'/whisk.system/cloudant/update-document', params});
+}
+
+// Got an error: check it's because there is no existing document in db.
+var noRevision = (ow, params, repo, entry) => err => {
+  let statusCode = err.error.response.result.error.statusCode;
+  console.log(statusCode);
+  if (statusCode != 404) { // Not there? normal.
+     throw err.error.response.result.error;
+  } else {
+     return register(ow, params, repo, entry);
+  }
+}
+
+var register = (ow, params, repo, entry) => {
+  params.doc = entry;
+
+  return ow.actions.call({actionName:'/whisk.system/cloudant/create-document', params});
+}
+
+function extendOpenWhisk(ow) {
+
+  ow.actions.call = params => {
+    params.blocking = true;
+    return ow.actions.invoke(params)
+                     .then( result => result.response.result )
+                     .catch( err => err );
+  };
+
+  ow.actions.unsafeCall = params => {
+    params.blocking = true;
+    return ow.actions.invoke(params)
+                     .then( result => result.response.result );
+  };
+
+  return ow;
 }
 
 exports.main = main;
