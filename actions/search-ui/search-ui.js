@@ -69,12 +69,6 @@ function main(args) {
           font-size: 12px;
           margin-top: 5px;
         }
-        .topbar {
-          background-color: #F0F0F0;
-          width: 100%;
-          height: 40px;
-          font-size: 15px;
-        }
         .publish-modal {
           top: 30%
         }
@@ -94,28 +88,54 @@ function main(args) {
         .display-inline {
           display: inline-block;
         }
+        .navbar {
+            min-height:32px !important
+        }
+        .title {
+          padding-top:50px;
+          padding-bottom:20px;
+          font-size:45px;
+          font-weight:300;
+        }
+        .no-results {
+          padding-top:50px;
+          font-size:25px;
+          font-weight:300;
+        }
       </style>
     </head>
     <body style="font-family:Roboto;font-weight:300">
-      <div class="container-fluid topbar">
-        <div class="row" style="padding-top:5px">
-          <div class="col-md-10"></div>
-          <div class="col-md-2"><a href="#publishModal" class="btn btn-sm btn-link" data-toggle="modal">Publish a Package</a></div>
-      </div>
-      <div class="container">
-        <h2 class="text-center" style="padding-top:30px;padding-bottom:20px;font-weight:300;font-size:45px">OpenWhisk Hub</h2>
+      <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-10"></div>
+              <div class="col-md-2"><button class="btn btn-sm btn-link" onclick="showPublish()">Publish a Package</button></div>
+            </div>
+        </div>
+      </nav>
+      <div class="container-fluid">
+        <h2 class="text-center title">OpenWhisk Hub</h2>
         <form id="searchform" onsubmit="search(); return false">
-          <div class="form-group" style="width:500px;margin:auto">
-            <input id="searchtext" class="form-control" style="float:left;width:90%"
-                   type="text"
-                   name="text"
-                   maxlength="1024"
-                   placeholder="enter keywords to search for OpenWhisk packages"
-                   value=""/>
-            <button id="searchsubmit" type="button" class="btn btn-primary glyphicon glyphicon-search" style="float:right;left:-10px"></button>
+          <div class="form-group center-block has-feedback" style="width:500px">
+            <div class="input-group">
+              <input id="searchtext" class="form-control"
+                     type="text" oninput="$('#noResults').addClass('hidden')"
+                     name="text"
+                     maxlength="1024"
+                     placeholder="enter keywords to search for OpenWhisk packages"
+                     value=""/>
+              <span class="input-group-btn">
+                 <button class="btn btn-primary" type="button" onclick="search(); return false;"><i class="glyphicon glyphicon-search"></i></button>
+              </span>
+
+              <span id="searchProgress" class="form-control-feedback hidden" style="right: 40px; font-size:19px">
+                <i class="fa fa-spinner fa-spin"></i>
+              </span>
+            </div>
           </div>
         </form>
-        <div style="clear:left;padding-top:40px" id="searchresult" class="list-group">
+        <p id="noResults" class="text-center no-results hidden">No Results! Try again.</p>
+        <div style="padding-top:40px" id="searchresult" class="list-group">
 
         </div>
         <footer class="footer">
@@ -161,16 +181,20 @@ function main(args) {
       </div>
       <script type="text/javascript">
         var last
-        $("#searchsubmit").click(function() {
-          search();
-        })
 
         function searchKeywords(keywords) {
+          $('#searchtext').blur();
+          $('#noResults').addClass("hidden");
           var txt = keywords.trim();
           if (last != txt) {
              last = txt;
 
-             $("#searchresult").load("search.html?keywords="+encodeURIComponent(last));
+             $('#searchProgress').removeClass("hidden");
+             $("#searchresult").load("search.html?keywords="+encodeURIComponent(last), function(response) {
+               if (response.trim().length === 0)
+                $('#noResults').removeClass("hidden");
+                $('#searchProgress').addClass("hidden");
+             });
           }
         }
 
@@ -204,6 +228,10 @@ function main(args) {
 
        function clearError() {
          $('#publisherror').addClass('hidden');
+       }
+
+       function showPublish() {
+         $('#publishModal').modal('show');
        }
 
        function publish() {

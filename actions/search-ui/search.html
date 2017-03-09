@@ -47,12 +47,6 @@
         font-size: 12px;
         margin-top: 5px;
       }
-      .topbar {
-        background-color: #F0F0F0;
-        width: 100%;
-        height: 40px;
-        font-size: 15px;
-      }
       .publish-modal {
         top: 30%
       }
@@ -72,29 +66,56 @@
       .display-inline {
         display: inline-block;
       }
+      .navbar {
+        min-height:32px !important
+      }
+      .title {
+        padding-top:50px;
+        padding-bottom:20px;
+        font-size:45px;
+        font-weight:300;
+      }
+      .no-results {
+        padding-top:50px;
+        font-size:25px;
+        font-weight:300;
+      }
     </style>
   </head>
   <body style="font-family:Roboto;font-weight:300">
-    <div class="container-fluid topbar">
-      <div class="row" style="padding-top:5px">
-        <div class="col-md-10"></div>
-        <div class="col-md-2"><button class="btn btn-sm btn-link" onclick="showPublish()">Publish a Package</button></div>
-    </div>
-    <div class="container">
-      <h2 class="text-center" style="padding-top:30px;padding-bottom:20px;font-weight:300;font-size:45px">OpenWhisk Hub</h2>
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-10"></div>
+            <div class="col-md-2"><button class="btn btn-sm btn-link" onclick="showPublish()">Publish a Package</button></div>
+          </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <h2 class="text-center title">OpenWhisk Hub</h2>
       <form id="searchform" onsubmit="search(); return false">
-        <div class="form-group" style="width:500px;margin:auto">
-          <input id="searchtext" class="form-control" style="float:left;width:89%"
-                 type="text"
-                 name="text"
-                 maxlength="1024"
-                 placeholder="enter keywords to search for OpenWhisk packages"
-                 value=""/>
-          <button id="searchsubmit" type="button" class="btn btn-primary glyphicon glyphicon-search" style="float:right"></button>
+        <div class="form-group center-block has-feedback" style="width:500px">
+          <div class="input-group">
+            <input id="searchtext" class="form-control"
+                   type="text" oninput="$('#noResults').addClass('hidden')"
+                   name="text"
+                   maxlength="1024"
+                   placeholder="enter keywords to search for OpenWhisk packages"
+                   value=""/>
+            <span class="input-group-btn">
+               <button class="btn btn-primary" type="button" onclick="search()"><i class="glyphicon glyphicon-search"></i></button>
+            </span>
+
+            <span id="searchProgress" class="form-control-feedback hidden" style="right: 40px; font-size:19px">
+              <i class="fa fa-spinner fa-spin"></i>
+            </span>
+          </div>
         </div>
       </form>
-      <div style="clear:left;padding-top:40px" id="searchresult" class="list-group">
-        <div class="list-group-item well container entry">
+      <p id="noResults" class="text-center no-results hidden">No Results! Try again.</p>
+      <div style="padding-top:40px" id="searchresult" class="list-group">
+        <div class="list-group-item well entry">
             <div class="row">
               <div class="text-center" style="font-size:18px;font-weight:500;padding-bottom:15px">OpenWhisk Registry</div>
               <div class="text-center edesc">A simple OpenWhisk Registry design to host OpenWhisk actions</div>
@@ -102,7 +123,7 @@
             </div>
 
         </div>
-        <div class="list-group-item well container entry hvr-glow">
+        <div class="list-group-item well entry hvr-glow">
             <div class="row" onclick="location.href='../show/show.html?owner=openwhisk&repo=openwhisk'">
                 <div class="text-center etitle">OpenWhisk Registry</div>
                 <div class="text-center edesc">A simple OpenWhisk Registry design to host OpenWhisk actions fjdafjoaisjfoiafoajfodaijfoajdfoaijdoj</div>
@@ -111,7 +132,7 @@
             </div>
 
         </div>
-        <div class="list-group-item well container entry">
+        <div class="list-group-item well entry">
             <div class="row">
               <div class="text-center etitle">OpenWhisk Registry</div>
               <div class="text-center edesc">A simple OpenWhisk Registry design to host OpenWhisk actions</div>
@@ -131,50 +152,57 @@
       </footer>
 
 
-    </div>
-    <div id="publishModal" class="modal fade publish-modal" style="font-family:Roboto;font-weight:300">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Publish your package to OpenWhisk Hub</h4>
-                    <p class="modal-subtitle">Or refresh an existing package with new <strong>keywords</strong> or <strong>description</strong></p>
-
-                </div>
-                <div class="modal-body">
-                  <div class="container-fluid">
-                    <div class="row">
-                      <div class="display-inline">https://github.com/</div>
-                      <form class="display-inline" style="width:75%" onsubmit="return publish()" ><input id="github" class="form-control" type="text" name="repo" maxlength="1024"
-                         placeholder="openwhisk/openwhisk" value="" oninput="clearError()"/></form>
-                    </div>
-                    <div class="row" style="margin-top:10px;font-size:12px">
-                      <p id="publisherror" class="text-danger hidden">Repository must be of the form <strong>owner/repository</strong></p></div>
+      </div>
+      <div id="publishModal" class="modal fade publish-modal" style="font-family:Roboto;font-weight:300">
+          <div class="modal-dialog">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                      <h4 class="modal-title">Publish your package to OpenWhisk Hub</h4>
+                      <p class="modal-subtitle">Or refresh an existing package with new <strong>keywords</strong> or <strong>description</strong></p>
 
                   </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <button id="publishsubmit" type="button" class="btn btn-primary" onclick="publish()">Publish</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="publishAlert" class="alert alert-success fade publish-alert">
-      Your package have been published!
+                  <div class="modal-body">
+                    <div class="container-fluid">
+                      <div class="row">
+                        <div class="display-inline">https://github.com/</div>
+                        <form class="display-inline" style="width:75%" onsubmit="return publish()" ><input id="github" class="form-control" type="text" name="repo" maxlength="1024"
+                           placeholder="openwhisk/openwhisk" value="" oninput="clearError()"/></form>
+                      </div>
+                      <div class="row" style="margin-top:10px;font-size:12px">
+                        <p id="publisherror" class="text-danger hidden">Repository must be of the form <strong>owner/repository</strong></p></div>
+
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                      <button id="publishsubmit" type="button" class="btn btn-primary" onclick="publish()">Publish</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div id="publishAlert" class="alert alert-success fade publish-alert">
+        Your package have been published!
+      </div>
     </div>
     <script type="text/javascript">
     var last
-    $("#searchsubmit").click(function() {
-      search();
-    })
 
     function searchKeywords(keywords) {
+      $('#searchtext').blur();
+      $('#noResults').addClass("hidden");
+
       var txt = keywords.trim();
       if (last != txt) {
-         last = txt;
+          last = txt;
 
-         //$("#searchresult").load("search.html?keywords="+encodeURIComponent(last));
+          $('#searchProgress').removeClass("hidden");
+          $("#searchresult").load("search.html?keywords="+encodeURIComponent(last), function(response) {
+            if (response.trim().length === 0)
+             $('#noResults').removeClass("hidden");
+            $('#searchProgress').addClass("hidden");
+          });
+
       }
     }
 
@@ -195,7 +223,6 @@
     }
 
     function onLoadSearch() {
-      console.log("load page");
       var vars = getUrlVars();
       if (vars && vars.keywords) {
         var keywords = decodeURIComponent(vars.keywords);
