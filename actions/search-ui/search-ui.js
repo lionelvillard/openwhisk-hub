@@ -32,9 +32,12 @@ function main(args) {
       <style>
         .footer {
            position: absolute;
-           bottom: 20px;
+           bottom: 0px;
            height: 45px;
            background-color: #f5f5f5;
+           width: 100%;
+           padding-top: 10px;
+           padding-left: 10px;
         }
         .entry {
           display: inline-block;
@@ -102,14 +105,21 @@ function main(args) {
           font-size:25px;
           font-weight:300;
         }
+        .float-right {
+          float: right
+        }
+        .img-openwhisk {
+          padding-left: 10px;
+          padding-top: 6px;
+        }
       </style>
     </head>
     <body style="font-family:Roboto;font-weight:300">
       <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container-fluid">
             <div class="row">
-              <div class="col-md-10"></div>
-              <div class="col-md-2"><button class="btn btn-sm btn-link" onclick="showPublish()">Publish a Package</button></div>
+              <img class="img-openwhisk" src="http://openwhisk.org/images/apache-openwhisk.svg" alt="Apache OpenWhisk">
+              <button class="btn btn-sm btn-link float-right" onclick="showPublish()">Publish a Package</button>
             </div>
         </div>
       </nav>
@@ -138,46 +148,44 @@ function main(args) {
         <div style="padding-top:40px" id="searchresult" class="list-group">
 
         </div>
-        <footer class="footer">
-          <div class="container" style="width:100%">
-            <p class="text-muted" style="text-align:center;margin-top:12px">
-              Try <a href="https://ibm.biz/openwhisk">OpenWhisk on IBM
-              Bluemix</a> today or visit <a href="http://openwhisk.org">Apache
-              Openwhisk</a> to learn more.
-            </p>
-          </div>
-        </footer>
-        <div id="publishModal" class="modal fade publish-modal" style="font-family:Roboto;font-weight:300">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title">Publish your package to OpenWhisk Hub</h4>
-                        <p class="modal-subtitle">Or refresh an existing package with new <strong>keywords</strong> or <strong>description</strong></p>
+      </div>
+      <footer class="footer">
+          <p class="text-muted">
+            Try <a href="https://ibm.biz/openwhisk">OpenWhisk on IBM
+            Bluemix</a> today or visit <a href="http://openwhisk.org">Apache
+            Openwhisk</a> to learn more.
+          </p>
+      </footer>
+      <div id="publishModal" class="modal fade publish-modal" style="font-family:Roboto;font-weight:300">
+          <div class="modal-dialog">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                      <h4 class="modal-title">Publish your package to OpenWhisk Hub</h4>
+                      <p class="modal-subtitle">Or refresh an existing package with new <strong>keywords</strong> or <strong>description</strong></p>
 
-                    </div>
-                    <div class="modal-body">
-                      <div class="container-fluid">
-                        <div class="row">
-                          <div class="display-inline">https://github.com/</div>
-                          <form class="display-inline" style="width:75%" onsubmit="return publish()" ><input id="github" class="form-control" type="text" name="repo" maxlength="1024"
-                             placeholder="openwhisk/openwhisk" value="" oninput="clearError()"/></form>
-                        </div>
-                        <div class="row" style="margin-top:10px;font-size:12px">
-                          <p id="publisherror" class="text-danger hidden">Repository must be of the form <strong>owner/repository</strong></p></div>
-
+                  </div>
+                  <div class="modal-body">
+                    <div class="container-fluid">
+                      <div class="row">
+                        <div class="display-inline">https://github.com/</div>
+                        <form class="display-inline" style="width:75%" onsubmit="return publish()" ><input id="github" class="form-control" type="text" name="repo" maxlength="1024"
+                           placeholder="openwhisk/openwhisk" value="" oninput="clearError()"/></form>
                       </div>
+                      <div class="row" style="margin-top:10px;font-size:12px">
+                        <p id="publisherror" class="text-danger hidden">Repository must be of the form <strong>owner/repository</strong></p></div>
+
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                        <button id="publishsubmit" type="button" class="btn btn-primary" onclick="publish()">Publish</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="publishAlert" class="alert alert-success fade publish-alert">
-          Your package have been published!
-        </div>
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                      <button id="publishsubmit" type="button" class="btn btn-primary" onclick="publish()">Publish</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div id="publishAlert" class="alert alert-success fade publish-alert">
+        Your package have been published!
       </div>
       <script type="text/javascript">
         var last
