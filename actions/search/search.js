@@ -17,9 +17,7 @@
 /*
    Search for packages from list of keywords
    Input:
-     host       where the cloudant service is located
-     username
-     password
+     dburl       where the cloudant service is located
      dbname     the name of the database containing the registry
      keywords   space-separated list of keywords
 */
@@ -29,11 +27,13 @@ var url = require('url');
 function main(args) {
   let ow = openwhisk();
 
-  let params = args;
-  params.docid = 'keywords';
-  params.indexname = 'searchKeywords';
-  params.search = {q: makeQuery(args.keywords), include_docs: true};
-
+  let params = {
+    url : args.dburl,
+    dbname: args.dbname,
+    docid : 'keywords',
+    indexname : 'searchKeywords',
+    search : {q: makeQuery(args.keywords), include_docs: true}
+  };
   return ow.actions.invoke({actionName:'/whisk.system/cloudant/exec-query-search', params, blocking:true}).then( result => {
     let rows = result.response.result.rows;
 
@@ -61,7 +61,7 @@ function main(args) {
 
       html += `
           <div class="list-group-item well container hvr-glow entry">
-            <div class="row" onclick="location.href='show.html?owner=${owner}&repo=${repo}'">
+            <div class="row" onclick="location.href='/owr/show.html?owner=${owner}&repo=${repo}'">
               <div class="text-center" style="font-size:18px;font-weight:500;padding-bottom:15px">${name}</div>
               <div class="text-center edesc">${desc}</div>`;
       if (fullrepo) {

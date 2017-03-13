@@ -198,7 +198,7 @@ function main(args) {
              last = txt;
 
              $('#searchProgress').removeClass("hidden");
-             $("#searchresult").load("search.html?keywords="+encodeURIComponent(last), function(response) {
+             $("#searchresult").load("/owr/search.html?keywords="+encodeURIComponent(last), function(response) {
                if (response.trim().length === 0)
                 $('#noResults').removeClass("hidden");
                 $('#searchProgress').addClass("hidden");
@@ -247,7 +247,7 @@ function main(args) {
          var matched = txt.match(/^([^\\/ ]+)\\/([^\\/ ]+)$/)
          if (matched) {
 
-           $.get('publish.html?owner=' + encodeURIComponent(matched[1]) + '&repo=' + encodeURIComponent(matched[2]));
+           $.get('/owr/publish.html?owner=' + encodeURIComponent(matched[1]) + '&repo=' + encodeURIComponent(matched[2]));
 
            $('#publishModal').modal('hide');
            setTimeout(function() {
