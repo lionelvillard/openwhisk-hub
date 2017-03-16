@@ -31,13 +31,11 @@ function main(args) {
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
       <style>
         .footer {
-           position: absolute;
-           bottom: 0px;
            height: 45px;
            background-color: #f5f5f5;
-           width: 100%;
            padding-top: 10px;
            padding-left: 10px;
+           opacity: 0.8;
         }
         .entry {
           display: inline-block;
@@ -92,7 +90,8 @@ function main(args) {
           display: inline-block;
         }
         .navbar {
-            min-height:32px !important
+            min-height:32px !important;
+            opacity: 0.8;
         }
         .title {
           padding-top:50px;
@@ -149,7 +148,7 @@ function main(args) {
 
         </div>
       </div>
-      <footer class="footer">
+      <footer class="footer navbar-fixed-bottom">
           <p class="text-muted">
             Try <a href="https://ibm.biz/openwhisk">OpenWhisk on IBM
             Bluemix</a> today or visit <a href="http://openwhisk.org">Apache

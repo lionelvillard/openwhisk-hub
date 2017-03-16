@@ -47,16 +47,21 @@ function main(args) {
           <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
           <style>
             .footer {
-               position: absolute;
-               bottom: 0px;
                height: 45px;
                background-color: #f5f5f5;
-               margin:30px;
+               padding-top: 10px;
+               padding-left: 10px;
+               opacity: 0.8;
+            }
+            .search-bar {
+              padding:10px;
+              background-color:#EEEEEE;
+              opacity: 0.8;
             }
           </style>
         </head>
         <body style="font-family:Roboto;font-weight:300">
-          <div class=".container-fluid" style="padding:10px;background-color:#EEEEEE">
+          <div class="container-fluid search-bar">
             <div class="row">
               <form id="searchform" onsubmit="return search()">
                 <div class="form-group" style="width:500px;margin:auto">
@@ -67,26 +72,24 @@ function main(args) {
               </form>
             </div>
           </div>
-          <div class=".container-fluid" style="margin:30px">
+          <div class="container-fluid" style="margin:30px">
               <div class="row">
-                <div class="col-xs-8" style="margin-top:10px">
+                <div class="col-xs-9" style="margin-top:10px">
                   <h2>${args.repo} <small> by ${args.owner}</small></h2>
                   <div style="border-top:1px solid #DDDDDD">${htmlreadme.data}</div>
                 </div>
-                <div class="col-xs-4" style="margin-top:100px;border-left:1px solid #DDDDDD;height:200px">
+                <div class="col-xs-3" style="margin-top:100px;border-left:1px solid #DDDDDD;height:200px">
                   <div><a href="https://github.com/${args.owner}/${args.repo}" class="btn btn-primary"><span class="fa fa-github" style="font-size:20px;"></span> View on GitHub</a></div>
                 </div>
             </div>
 
         </div>
-          <footer class="footer">
-          <div class="container" style="width:100%">
-            <p class="text-muted" style="text-align:center;margin-top:12px">
+        <footer class="footer navbar-fixed-bottom">
+            <p class="text-muted">
               Try <a href="https://ibm.biz/openwhisk">OpenWhisk on IBM
               Bluemix</a> today or visit <a href="http://openwhisk.org">Apache
               Openwhisk</a> to learn more.
             </p>
-          </div>
         </footer>
         <script type="text/javascript">
           function search() {
