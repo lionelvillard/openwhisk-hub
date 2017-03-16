@@ -1,0 +1,15 @@
+{
+  "name": "fetch-manifest",
+  "version": "1.0.0",
+  "description": "Fetches manifest, parses it and converts it to JSON",
+  "main": "fetch.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "openwhisk": "^3.3.5",
+    "yamljs": "^0.2.8"
+  }
+}
