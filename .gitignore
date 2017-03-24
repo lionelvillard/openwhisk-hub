@@ -4,3 +4,5 @@ db-blue.json
 hub.json
 *.html
 .ptk
+build
+nginx.conf

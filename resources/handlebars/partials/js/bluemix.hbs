@@ -1,0 +1,28 @@
+
+function updateBluemixLoginState() {
+  if (icookies.hasOwnProperty('bluemix')) {
+    $('#bluemixLogin').addClass('hidden');
+    $('#bluemixLogout').removeClass('hidden');
+  } else {
+    $('#bluemixLogin').removeClass('hidden');
+    $('#bluemixLogout').addClass('hidden');
+  }
+}
+
+function loginBluemix(endpoint) {
+  state.providerName = 'bluemix';
+  state.redirect_uri = endpoint;
+
+  let url = 'http://login.ng.bluemix.net/UAALoginServerWAR/oauth/authorize';
+  let redirect_uri = encodeURIComponent('https://openwhiskhub.mybluemix.net/owr/login-redirect.http');
+  let encstate = encodeURIComponent(JSON.stringify(state));
+
+  window.location.href = url + '?client_id=openwhiskhub&response_type=code&redirect_uri=' + redirect_uri + '&state=' + encstate;
+}
+
+function logoutBluemix() {
+  delete state.access_token;
+  delete state.refresh_token;
+  delete state.owauth;
+  updateBluemixLoginState();
+}

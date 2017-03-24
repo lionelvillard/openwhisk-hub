@@ -1,0 +1,27 @@
+function showPublish() {
+  $('#publishModal').modal('show');
+}
+
+function clearError() {
+  $('#publisherror').addClass('hidden');
+}
+
+function publish() {
+  var txt = $('#github').val().trim();
+  var matched = txt.match(/^([^\/ ]+)\/([^\/ ]+)$/);
+  if (matched) {
+
+    $.get('publish.html?owner=' + encodeURIComponent(matched[1]) + '&repo=' + encodeURIComponent(matched[2]));
+
+    $('#publishModal').modal('hide');
+    setTimeout(function() {
+      $('#publishAlert').addClass('in');
+    }, 250);
+    setTimeout(function() {
+      $('#publishAlert').removeClass('in');
+    }, 2000);
+  } else {
+    $('#publisherror').removeClass('hidden');
+  }
+  return false;
+}

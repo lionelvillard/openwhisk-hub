@@ -25,6 +25,8 @@ var openwhisk = require('openwhisk');
 var url = require('url');
 
 function main(args) {
+  console.log(JSON.stringify(args));
+
   let ow = openwhisk();
 
   let params = {

@@ -1,0 +1,32 @@
+<div id="publishModal" class="modal fade publish-modal" style="font-family:Roboto;font-weight:300">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Publish your package to OpenWhisk Hub</h4>
+                <p class="modal-subtitle">Or refresh an existing package with new <strong>keywords</strong> or <strong>description</strong></p>
+
+            </div>
+            <div class="modal-body">
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="display-inline">https://github.com/</div>
+                  <form class="display-inline" style="width:75%" onsubmit="return publish()" ><input id="github" class="form-control" type="text" name="repo" maxlength="1024"
+                     placeholder="openwhisk/openwhisk" value="" oninput="clearError()"/></form>
+                </div>
+                <div class="row" style="margin-top:10px;font-size:12px">
+                  <p id="publisherror" class="text-danger hidden">Repository must be of the form <strong>owner/repository</strong></p></div>
+
+              </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button id="publishsubmit" type="button" class="btn btn-primary" onclick="publish()">Publish</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="publishAlert" class="alert alert-success fade publish-alert">
+  Your package have been published!
+</div>
