@@ -261,9 +261,9 @@ function main(args) {
       }
       
       function logoutBluemix() {
-        delete state.access_token;
-        delete state.refresh_token;
-        delete state.owauth;
+        delete icookies.bluemix;
+        document.cookie = "bluemix=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      
         updateBluemixLoginState();
       }
       function showPublish() {

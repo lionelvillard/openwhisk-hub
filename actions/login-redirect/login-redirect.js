@@ -26,7 +26,7 @@ function main(params) {
          .then( result => {
            return new Promise((resolve, reject) => {
              let params = result.response.result;
-             
+
              let postData = querystring.stringify({
                accessToken  : params.access_token,
                refreshToken : params.access_token_body.refresh_token
@@ -89,7 +89,7 @@ function redirect(params) {
     idRecord: params.idRecord,
     auths: params.auths
   }
-  payload.headers["Set-Cookie"] = `bluemix=${JSON.stringify(cookie)}; Expires=${new Date(new Date().getTime()+86409000).toUTCString()}; Path=/; Version=`
+  payload.headers["Set-Cookie"] = `bluemix=${JSON.stringify(cookie)}; Path=/;`
 
   return payload;
 }
