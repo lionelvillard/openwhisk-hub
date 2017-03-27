@@ -9,7 +9,7 @@ gulp.task('default', ['browser-sync', 'actions', 'watch']);
 gulp.task('browser-sync', () => {
   bs.init({
     server: {
-      baseDir: '../../actions/',
+      baseDir: '../../actions',
       index: 'search-ui/search-ui.html',
     },
     notify: false,

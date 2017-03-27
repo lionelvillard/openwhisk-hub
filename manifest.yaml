@@ -1,60 +1,46 @@
 package:
-  name: openwhisk-registry
+  name: owr
   version: 0.0.1
   description: Experimental OpenWhisk Registry
   license: Apache-2.0
   repositories:
-  - url: http://github.com/lionelvillard/openwhisk-hub
-  dependencies: {}
-  function: ""
-  package_credential: ""
-  namespace: ""
-  credential: ""
+    - url: http://github.com/lionelvillard/openwhisk-hub
+  dependencies:
+    oauth:
+      location: http://github.com/starpit/openwhisk-oauth
   actions:
     init:
-      version: ""
-      location: ""
+      location: actions/init/init.js
       runtime: nodejs:6
-      namespace: ""
-      credential: ""
-      inputs: {}
-      outputs: {}
-      name: init
-      annotations: {}
     publish:
-      version: ""
-      location: ""
+      location: actions/publish/publish.js
       runtime: nodejs:6
-      namespace: ""
-      credential: ""
-      inputs: {}
-      outputs: {}
-      name: publish
-      annotations: {}
+      inputs:
+        dburl : $DBURL
+        dbname : openwhisk
     search:
-      version: ""
-      location: ""
+      location: actions/search/search.js
       runtime: nodejs:6
-      namespace: ""
-      credential: ""
-      inputs: {}
-      outputs: {}
-      name: search
-      annotations: {}
+      inputs:
+        dburl : $DBURL
+        dbname : openwhisk
     search-ui:
-      version: ""
-      location: ""
+      location: actions/search-ui/search-ui.js
       runtime: nodejs:6
-      namespace: ""
-      credential: ""
-      inputs: {}
-      outputs: {}
-      name: search-ui
-      annotations: {}
-  triggers: {}
-  feeds: {}
-  rules: {}
-  inputs: {}
-  sequences: {}
-  annotations: {}
-filepath: ""
+      annotations:
+        web-export: true
+    show:
+      location: actions/show/show.js
+      runtime: nodejs:6
+      annotations:
+        web-export: true
+    login-redirect:
+      location: actions/login-redirect/login-redirect.js
+      runtime: nodejs:6
+      annotations:
+        web-export: true
+    render-readme:
+      location: actions/render-readme/render-readme.js
+      runtime: nodejs:6
+      annotations:
+        web-export: true
