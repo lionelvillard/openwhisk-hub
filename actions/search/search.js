@@ -61,9 +61,12 @@ function main(args) {
         repo = path[path.length - 1];
       }
 
+      // TODO: should return a JSON object.
+      // TODO: package name should not be hardcoded 
+
       html += `
           <div class="list-group-item well container hvr-glow entry">
-            <div class="row" onclick="location.href='/owr/show.html?owner=${owner}&repo=${repo}'">
+            <div class="row" onclick="location.href='../owr/show.html?owner=${owner}&repo=${repo}'">
               <div class="text-center" style="font-size:18px;font-weight:500;padding-bottom:15px">${name}</div>
               <div class="text-center edesc">${desc}</div>`;
       if (fullrepo) {

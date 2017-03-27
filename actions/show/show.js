@@ -103,7 +103,7 @@ function main(args) {
         <div class="col-xs-9" style="margin-top:10px">
             <h2><span id="repo"></span> <small> by <span id="owner"></span></small></h2>
             <div style="border-top:1px solid #DDDDDD" id="readme"></div>
-          
+
         </div>
         <div class="col-xs-3" style="margin-top:100px;border-left:1px solid #DDDDDD;height:200px">
           <div style="margin-bottom:10px"><a id="viewgithub" class="btn btn-primary"><span class="fa fa-github" style="font-size:20px"></span> View on GitHub</a></div>
@@ -172,8 +172,11 @@ function main(args) {
         let cookies = decodeURIComponent(document.cookie);
         let ca = cookies.split(';');
         for  (var i = 0; i < ca.length; i++) {
-          let keyvalue = ca[i].trim().split('=');
-          icookies[keyvalue[0].trim()] = keyvalue[1].trim();
+          let entry = ca[i].trim();
+          let eqi = entry.indexOf('=');
+          let key = entry.substring(0, eqi);
+          let value = entry.substring(eqi + 1);
+          icookies[key] = value;
         }
       }
     }
@@ -257,7 +260,7 @@ function main(args) {
         $("#viewgithub").attr('href', 'https://github.com/' + state.owner + '/' + state.repo);
 
 
-        $("#readme").load('/owr/render-readme.html?repo=' + state.repo + '&owner=' + state.owner);
+        $("#readme").load('../owr/render-readme.html?repo=' + state.repo + '&owner=' + state.owner);
       };
     }
 

@@ -24,6 +24,8 @@ package:
       inputs:
         dburl : $DBURL
         dbname : openwhisk
+      annotations:
+        web-export: true
     search-ui:
       location: actions/search-ui/search-ui.js
       runtime: nodejs:6

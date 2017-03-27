@@ -227,8 +227,11 @@ function main(args) {
           let cookies = decodeURIComponent(document.cookie);
           let ca = cookies.split(';');
           for  (var i = 0; i < ca.length; i++) {
-            let keyvalue = ca[i].trim().split('=');
-            icookies[keyvalue[0].trim()] = keyvalue[1].trim();
+            let entry = ca[i].trim();
+            let eqi = entry.indexOf('=');
+            let key = entry.substring(0, eqi);
+            let value = entry.substring(eqi + 1);
+            icookies[key] = value;
           }
         }
       }

@@ -40,7 +40,7 @@
             <h2><span id="repo"></span> <small> by <span id="owner"></span></small></h2>
             <div style="border-top:1px solid #DDDDDD" id="readme"></div>
           {{/if}}
-          
+
         </div>
         <div class="col-xs-3" style="margin-top:100px;border-left:1px solid #DDDDDD;height:200px">
           <div style="margin-bottom:10px"><a id="viewgithub" class="btn btn-primary"><span class="fa fa-github" style="font-size:20px"></span> View on GitHub</a></div>
@@ -75,7 +75,7 @@
         $("#viewgithub").attr('href', 'https://github.com/' + state.owner + '/' + state.repo);
 
 
-        $("#readme").load('/owr/render-readme.html?repo=' + state.repo + '&owner=' + state.owner);
+        $("#readme").load('../owr/render-readme.html?repo=' + state.repo + '&owner=' + state.owner);
       };
     }
 
