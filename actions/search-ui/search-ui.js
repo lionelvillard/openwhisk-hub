@@ -308,7 +308,7 @@ function main(args) {
             last = txt;
 
             $('#searchProgress').removeClass("hidden");
-            $("#searchresult").load("search.html?keywords="+encodeURIComponent(last), function(response) {
+            $("#searchresult").load("../owr/search.html?keywords="+encodeURIComponent(last), function(response) {
               if (response.trim().length === 0)
                 $('#noResults').removeClass("hidden");
               $('#searchProgress').addClass("hidden");

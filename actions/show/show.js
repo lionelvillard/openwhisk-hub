@@ -76,7 +76,7 @@ function main(args) {
       <div class="container-fluid">
           <div class="row">
             <img class="img-openwhisk" src="http://openwhisk.org/images/apache-openwhisk.svg" alt="Apache OpenWhisk">
-            <button id="bluemixLogin" class="btn btn-sm btn-link float-right" onclick="loginBluemix('https://openwhiskhub.mybluemix.net/owr/show')">Log in Bluemix</button>
+            <button id="bluemixLogin" class="btn btn-sm btn-link float-right" onclick="loginBluemix('https://openwhiskhub.mybluemix.net/owr/show.html')">Log in Bluemix</button>
             <button id="bluemixLogout" class="btn btn-sm btn-link float-right hidden" onclick="logoutBluemix()">Log out</button>
             <button class="btn btn-sm btn-link float-right" onclick="showPublish()">Publish a Package</button>
           </div>
@@ -244,7 +244,7 @@ function main(args) {
 
     $("#searchsubmit").click(function() {
       var txt = $("#searchtext").val().trim();
-      $("#searchresult").load("search.html?keywords"+last);
+      $("#searchresult").load("../owr/search.html?keywords"+last);
     })
 
     function checkManifest() {
@@ -263,7 +263,6 @@ function main(args) {
         $("#readme").load('../owr/render-readme.html?repo=' + state.repo + '&owner=' + state.owner);
       };
     }
-
 
     window.onload = function() {
       onLoadCommon();

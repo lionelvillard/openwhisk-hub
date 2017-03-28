@@ -14,7 +14,7 @@
     </style>
   </head>
   <body class="font-light navbar-padding">
-    {{> html/navbar endpoint='https://openwhiskhub.mybluemix.net/owr/show' }}
+    {{> html/navbar endpoint='https://openwhiskhub.mybluemix.net/owr/show.html' }}
 
     <div class="container-fluid">
 
@@ -59,7 +59,7 @@
 
     $("#searchsubmit").click(function() {
       var txt = $("#searchtext").val().trim();
-      $("#searchresult").load("search.html?keywords"+last);
+      $("#searchresult").load("../owr/search.html?keywords"+last);
     })
 
     function checkManifest() {
@@ -78,7 +78,6 @@
         $("#readme").load('../owr/render-readme.html?repo=' + state.repo + '&owner=' + state.owner);
       };
     }
-
 
     window.onload = function() {
       onLoadCommon();
