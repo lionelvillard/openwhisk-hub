@@ -23,9 +23,11 @@ function main(args) {
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,500">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/octicons/4.4.0/font/octicons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
 
     <style>
       
@@ -128,12 +130,38 @@ function main(args) {
   <body class="font-light navbar-padding">
       <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container-fluid">
-            <div class="row">
-              <img class="img-openwhisk" src="http://openwhisk.org/images/apache-openwhisk.svg" alt="Apache OpenWhisk">
-              <button id="bluemixLogin" class="btn btn-sm btn-link float-right" onclick="loginBluemix('https://openwhisk.ng.bluemix.net/api/v1/web/villard@us.ibm.com_dev-test/owr/search-ui.html')">Log in Bluemix</button>
-              <button id="bluemixLogout" class="btn btn-sm btn-link float-right hidden" onclick="logoutBluemix()">Log out</button>
-              <button class="btn btn-sm btn-link float-right" onclick="showPublish()">Publish a Package</button>
+          <div class="navbar-header">
+            <img class="img-openwhisk" src="http://openwhisk.org/images/apache-openwhisk.svg" alt="Apache OpenWhisk">
+          </div>
+          <button id="bluemixLogin" class="btn btn-sm btn-link navbar-right hidden" onclick="loginBluemix('https://openwhisk.ng.bluemix.net/api/v1/web/villard@us.ibm.com_dev-test/owr/search-ui.html')">Log in Bluemix</button>
+          <div id="userDropdown" class="dropdown navbar-right hidden">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="fa fa-user-circle-o"></span>
+            </button>
+            <div class="dropdown-menu" style="width:300px">
+              <div style="margin:10px">
+                <div>
+                  <div class="display-inline" style="width:100px"><span class="text-left">User name:</span></div>
+                  <span id="userName" class="text-right"></span>
+                </div>
+                <div class="">
+                  <div class="display-inline" style="width:100px;padding-top:2px"><span class="text-left"><small>User id:</small></span></div>
+                  <span class="text-right"><small id="userID"></small></span>
+                </div>
+                <div style="padding-top:15px">
+                  <div class="display-inline" style="width:100px"><span class="text-left">Space:</span></div>
+                  <select id="spaceOptions" class="selectpicker display-inline" data-width="60%">
+                    <option>dev</option>
+                    <option>prod</option>
+                  </select>
+                </div>
+                <p role="separator" class="divider"></p>
+                <p role="button" class="text-center" onclick="logoutBluemix()"></p>
+      
+              </div>
             </div>
+          </div>
+          <button class="btn btn-sm btn-link navbar-right" onclick="showPublish()">Publish a Package</button>
         </div>
       </nav>
     <div class="container-fluid">
@@ -235,20 +263,65 @@ function main(args) {
           }
         }
       }
+      
       function onLoadCommon() {
         indexCookies();
         initState();
       
         updateBluemixLoginState();
+      
+        $('#userDropdown').on('hide.bs.dropdown', () => {
+          $('.bootstrap-select.open').removeClass('open');
+        });
       }
+      
+      // Allow select picker to be in a dropdown
+      
+      $('.dropdown-menu').on('click', function(event) {
+      	event.stopPropagation();
+      });
+      
+      $('.selectpicker').selectpicker({
+      	container: 'body'
+      });
+      
+      $('body').on('click', function(event) {
+      	var target = $(event.target);
+      	if (target.parents('.bootstrap-select').length) {
+      		event.stopPropagation();
+      		$('.bootstrap-select.open').removeClass('open');
+      	}
+      });
       
       function updateBluemixLoginState() {
         if (icookies.hasOwnProperty('bluemix')) {
           $('#bluemixLogin').addClass('hidden');
-          $('#bluemixLogout').removeClass('hidden');
+      
+          let bm =
+            icookies.bluemix;
+      
+          $('#userName').text(bm.idRecord.name);
+          $('#userID').text(bm.id);
+      
+          let options = "";
+          let namespaces = bm.auths.namespaces;
+          if (namespaces) {
+            for  (let i = 0; i < namespaces.length; i++) {
+              let name = namespaces[i].name;
+              let idx = name.lastIndexOf('_');
+              if (idx != -1) {
+                options += '<option>' + name.substring(idx + 1) + '</option>';
+              }
+            }
+          }
+      
+          $('#spaceOptions').html(options);
+          $('#spaceOptions').selectpicker('refresh');
+      
+          $('#userDropdown').removeClass('hidden');
         } else {
           $('#bluemixLogin').removeClass('hidden');
-          $('#bluemixLogout').addClass('hidden');
+          $('#userDropdown').addClass('hidden');
         }
       }
       

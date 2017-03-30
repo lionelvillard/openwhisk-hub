@@ -1,10 +1,36 @@
 <nav class="navbar navbar-default navbar-fixed-top">
   <div class="container-fluid">
-      <div class="row">
-        <img class="img-openwhisk" src="http://openwhisk.org/images/apache-openwhisk.svg" alt="Apache OpenWhisk">
-        <button id="bluemixLogin" class="btn btn-sm btn-link float-right" onclick="loginBluemix('{{endpoint}}')">Log in Bluemix</button>
-        <button id="bluemixLogout" class="btn btn-sm btn-link float-right hidden" onclick="logoutBluemix()">Log out</button>
-        <button class="btn btn-sm btn-link float-right" onclick="showPublish()">Publish a Package</button>
+    <div class="navbar-header">
+      <img class="img-openwhisk" src="http://openwhisk.org/images/apache-openwhisk.svg" alt="Apache OpenWhisk">
+    </div>
+    <button id="bluemixLogin" class="btn btn-sm btn-link navbar-right hidden" onclick="loginBluemix('{{endpoint}}')">Log in Bluemix</button>
+    <div id="userDropdown" class="dropdown navbar-right hidden">
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="fa fa-user-circle-o"></span>
+      </button>
+      <div class="dropdown-menu" style="width:300px">
+        <div style="margin:10px">
+          <div>
+            <div class="display-inline" style="width:100px"><span class="text-left">User name:</span></div>
+            <span id="userName" class="text-right">{{#if withStatic}}Lionel Villard{{/if}}</span>
+          </div>
+          <div class="">
+            <div class="display-inline" style="width:100px;padding-top:2px"><span class="text-left"><small>User id:</small></span></div>
+            <span class="text-right"><small id="userID">{{#if withStatic}}villard@us.ibm.com{{/if}}</small></span>
+          </div>
+          <div style="padding-top:15px">
+            <div class="display-inline" style="width:100px"><span class="text-left">Space:</span></div>
+            <select id="spaceOptions" class="selectpicker display-inline" data-width="60%">
+              <option>dev</option>
+              <option>prod</option>
+            </select>
+          </div>
+          <p role="separator" class="divider"></p>
+          <p role="button" class="text-center" onclick="logoutBluemix()">{{#if withStatic}}Log out Bluemix{{/if}}</p>
+
+        </div>
       </div>
+    </div>
+    <button class="btn btn-sm btn-link navbar-right" onclick="showPublish()">Publish a Package</button>
   </div>
 </nav>

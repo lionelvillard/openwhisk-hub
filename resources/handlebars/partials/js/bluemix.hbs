@@ -1,11 +1,48 @@
 
 function updateBluemixLoginState() {
-  if (icookies.hasOwnProperty('bluemix')) {
+  if ({{#if withStatic }} true || {{/if}}icookies.hasOwnProperty('bluemix')) {
     $('#bluemixLogin').addClass('hidden');
-    $('#bluemixLogout').removeClass('hidden');
+
+    let bm =
+    {{#if withStatic }}
+      {
+        idRecord: {
+          name: 'Lionel Villard'
+        },
+        id : 'villard@us.ibm.com',
+        auths : {
+          namespaces: [
+            { name: 'villard@us.ibm.com_dev' },
+            { name: 'villard@us.ibm.com_dev-test' }
+          ]
+        }
+      }
+    {{else}}
+      icookies.bluemix;
+    {{/if}}
+
+    $('#userName').text(bm.idRecord.name);
+    $('#userID').text(bm.id);
+
+    let options = "";
+    let namespaces = bm.auths.namespaces;
+    if (namespaces) {
+      for  (let i = 0; i < namespaces.length; i++) {
+        let name = namespaces[i].name;
+        let idx = name.lastIndexOf('_');
+        if (idx != -1) {
+          options += '<option>' + name.substring(idx + 1) + '</option>';
+        }
+      }
+    }
+
+    $('#spaceOptions').html(options);
+    $('#spaceOptions').selectpicker('refresh');
+
+    $('#userDropdown').removeClass('hidden');
   } else {
     $('#bluemixLogin').removeClass('hidden');
-    $('#bluemixLogout').addClass('hidden');
+    $('#userDropdown').addClass('hidden');
   }
 }
 
