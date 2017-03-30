@@ -3,8 +3,9 @@ const partialRoot = `${handlebarsRoot}/partials`;
 
 const paths = {
   handlebars: handlebarsRoot,
-  partials: [partialRoot],
+  partials: [partialRoot, '../../build/js'],
   actions: '../../actions',
+  nodejs: '../../resources/nodejs',
   hbsbuild: `${handlebarsRoot}/build`
 }
 
@@ -20,7 +21,8 @@ const options = {
   handlebars : {
     batch : paths.partials,
     ignorePartials: true
-  }
+  },
+  dev : true
 }
 
 module.exports.paths = paths;

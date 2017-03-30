@@ -11,6 +11,7 @@
   "devDependencies": {
     "browser-sync": "^2.18.8",
     "gulp": "^3.9.1",
+    "gulp-browserify": "^0.5.1",
     "gulp-compile-handlebars": "^0.6.1",
     "gulp-livereload": "^3.8.1",
     "gulp-rename": "^1.2.2",

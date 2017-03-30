@@ -72,17 +72,16 @@ function main(args) {
     </style>
   </head>
   <body class="font-light navbar-padding">
-    <nav class="navbar navbar-default navbar-fixed-top">
-      <div class="container-fluid">
-          <div class="row">
-            <img class="img-openwhisk" src="http://openwhisk.org/images/apache-openwhisk.svg" alt="Apache OpenWhisk">
-            <button id="bluemixLogin" class="btn btn-sm btn-link float-right" onclick="loginBluemix('https://openwhiskhub.mybluemix.net/owr/show.html')">Log in Bluemix</button>
-            <button id="bluemixLogout" class="btn btn-sm btn-link float-right hidden" onclick="logoutBluemix()">Log out</button>
-            <button class="btn btn-sm btn-link float-right" onclick="showPublish()">Publish a Package</button>
-          </div>
-      </div>
-    </nav>
-
+      <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="row">
+              <img class="img-openwhisk" src="http://openwhisk.org/images/apache-openwhisk.svg" alt="Apache OpenWhisk">
+              <button id="bluemixLogin" class="btn btn-sm btn-link float-right" onclick="loginBluemix('https://openwhisk.ng.bluemix.net/owr/show.html')">Log in Bluemix</button>
+              <button id="bluemixLogout" class="btn btn-sm btn-link float-right hidden" onclick="logoutBluemix()">Log out</button>
+              <button class="btn btn-sm btn-link float-right" onclick="showPublish()">Publish a Package</button>
+            </div>
+        </div>
+      </nav>
     <div class="container-fluid">
 
       <div class="row search-bar">
@@ -94,7 +93,7 @@ function main(args) {
                    maxlength="1024"
                    placeholder="enter keywords to search for OpenWhisk packages"
                    value=""/>
-            <button id="searchsubmit" type="button" class="btn btn-primary glyphicon glyphicon-search float-right"></button>
+            <button id="searchsubmit" type="button" class="btn btn-primary glyphicon glyphicon-search float-right" onclick="return search();"></button>
           </div>
         </form>
 
@@ -199,7 +198,7 @@ function main(args) {
       var matched = txt.match(/^([^\\/ ]+)\\/([^\\/ ]+)$/);
       if (matched) {
     
-        $.get('publish.html?owner=' + encodeURIComponent(matched[1]) + '&repo=' + encodeURIComponent(matched[2]));
+        $.get('../owr/publish.html?owner=' + encodeURIComponent(matched[1]) + '&repo=' + encodeURIComponent(matched[2]));
     
         $('#publishModal').modal('hide');
         setTimeout(function() {
@@ -242,10 +241,11 @@ function main(args) {
       updateBluemixLoginState();
     }
 
-    $("#searchsubmit").click(function() {
+    function search() {
       var txt = $("#searchtext").val().trim();
-      $("#searchresult").load("../owr/search.html?keywords"+last);
-    })
+      window.location.href = "../owr/search-ui.html?keywords="+txt;
+      return false;
+    }
 
     function checkManifest() {
       $.get('https://raw.githubusercontent.com/lionelvillard/openwhisk-hub/master/manifest.yaml', function(data) {
@@ -258,7 +258,6 @@ function main(args) {
         $("#repo").text(state.repo);
         $("#owner").text(state.owner);
         $("#viewgithub").attr('href', 'https://github.com/' + state.owner + '/' + state.repo);
-
 
         $("#readme").load('../owr/render-readme.html?repo=' + state.repo + '&owner=' + state.owner);
       };

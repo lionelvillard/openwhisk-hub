@@ -126,16 +126,16 @@ function main(args) {
     </style>
   </head>
   <body class="font-light navbar-padding">
-    <nav class="navbar navbar-default navbar-fixed-top">
-      <div class="container-fluid">
-          <div class="row">
-            <img class="img-openwhisk" src="http://openwhisk.org/images/apache-openwhisk.svg" alt="Apache OpenWhisk">
-            <button id="bluemixLogin" class="btn btn-sm btn-link float-right" onclick="loginBluemix('https://openwhiskhub.mybluemix.net/')">Log in Bluemix</button>
-            <button id="bluemixLogout" class="btn btn-sm btn-link float-right hidden" onclick="logoutBluemix()">Log out</button>
-            <button class="btn btn-sm btn-link float-right" onclick="showPublish()">Publish a Package</button>
-          </div>
-      </div>
-    </nav>
+      <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="row">
+              <img class="img-openwhisk" src="http://openwhisk.org/images/apache-openwhisk.svg" alt="Apache OpenWhisk">
+              <button id="bluemixLogin" class="btn btn-sm btn-link float-right" onclick="loginBluemix('https://openwhisk.ng.bluemix.net/api/v1/web/villard@us.ibm.com_dev-test/owr/search-ui.html')">Log in Bluemix</button>
+              <button id="bluemixLogout" class="btn btn-sm btn-link float-right hidden" onclick="logoutBluemix()">Log out</button>
+              <button class="btn btn-sm btn-link float-right" onclick="showPublish()">Publish a Package</button>
+            </div>
+        </div>
+      </nav>
     <div class="container-fluid">
       <h2 class="text-center title">OpenWhisk Hub</h2>
       <form id="searchform" onsubmit="search(); return false">
@@ -282,7 +282,7 @@ function main(args) {
         var matched = txt.match(/^([^\\/ ]+)\\/([^\\/ ]+)$/);
         if (matched) {
       
-          $.get('publish.html?owner=' + encodeURIComponent(matched[1]) + '&repo=' + encodeURIComponent(matched[2]));
+          $.get('../owr/publish.html?owner=' + encodeURIComponent(matched[1]) + '&repo=' + encodeURIComponent(matched[2]));
       
           $('#publishModal').modal('hide');
           setTimeout(function() {
@@ -323,7 +323,7 @@ function main(args) {
 
       function updateSearchState() {
         if (state.hasOwnProperty('keywords')) {
-          $("#searchtext").value = state.keywords;
+          $("#searchtext").val(state.keywords);
           searchKeywords();
         }
       }

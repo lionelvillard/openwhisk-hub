@@ -14,8 +14,11 @@
     </style>
   </head>
   <body class="font-light navbar-padding">
-    {{> html/navbar endpoint='https://openwhiskhub.mybluemix.net/owr/show.html' }}
-
+    {{#if dev}}
+      {{> html/navbar endpoint='https://openwhisk.ng.bluemix.net/api/v1/web/villard@us.ibm.com_dev-test/owr/show.html' }}
+    {{else}}
+      {{> html/navbar endpoint='https://openwhiskhub.mybluemix.net/owr/show.html' }}
+    {{/if}}
     <div class="container-fluid">
 
       <div class="row search-bar">
@@ -27,7 +30,7 @@
                    maxlength="1024"
                    placeholder="enter keywords to search for OpenWhisk packages"
                    value=""/>
-            <button id="searchsubmit" type="button" class="btn btn-primary glyphicon glyphicon-search float-right"></button>
+            <button id="searchsubmit" type="button" class="btn btn-primary glyphicon glyphicon-search float-right" onclick="return search();"></button>
           </div>
         </form>
 
@@ -57,10 +60,11 @@
     {{> js/publish}}
     {{> js/bluemix}}
 
-    $("#searchsubmit").click(function() {
+    function search() {
       var txt = $("#searchtext").val().trim();
-      $("#searchresult").load("../owr/search.html?keywords"+last);
-    })
+      window.location.href = "../owr/search-ui.html?keywords="+txt;
+      return false;
+    }
 
     function checkManifest() {
       $.get('https://raw.githubusercontent.com/lionelvillard/openwhisk-hub/master/manifest.yaml', function(data) {
@@ -73,7 +77,6 @@
         $("#repo").text(state.repo);
         $("#owner").text(state.owner);
         $("#viewgithub").attr('href', 'https://github.com/' + state.owner + '/' + state.repo);
-
 
         $("#readme").load('../owr/render-readme.html?repo=' + state.repo + '&owner=' + state.owner);
       };

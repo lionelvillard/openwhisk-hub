@@ -13,6 +13,7 @@ const pages = (example) => () => {
   return stream.pipe(bs.stream());
 }
 
+// no browserify quite yet 'scripts'
 gulp.task('actions', ['rawpages', 'pages'], actions);
 gulp.task('pages', pages(true));
 gulp.task('rawpages', pages(false));
@@ -28,7 +29,7 @@ function page(name, example) {
   if (example)
     suffix = '-demo';
   return gulp.src(`${config.paths.handlebars}/pages/${name}.html.hbs`)
-      .pipe(handlebars({withStatic: example}, config.options.handlebars))
+      .pipe(handlebars({withStatic: example, dev:config.options.dev}, config.options.handlebars))
       .pipe(rename(`${name}${suffix}.html`))
       .pipe(gulp.dest(`${config.paths.actions}/${name}`));
 }

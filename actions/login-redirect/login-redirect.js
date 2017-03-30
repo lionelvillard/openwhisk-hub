@@ -27,14 +27,14 @@ function main(params) {
            return new Promise((resolve, reject) => {
              let params = result.response.result;
 
-             let postData = querystring.stringify({
+
+             let postData = JSON.stringify({
                accessToken  : params.access_token,
                refreshToken : params.access_token_body.refresh_token
              });
 
              let postOptions = {
                host: 'https://openwhisk.ng.bluemix.net',
-               port: '80',
                path: '/bluemix/v1/authenticate',
                method: 'POST',
                headers: {
@@ -64,10 +64,10 @@ function main(params) {
                resolve(redirect(params));
              });
 
+             console.log(JSON.stringify(postData));
 
              req.write(postData);
              req.end();
-             console.log('request sent');
 
            }).catch( err => err);
          })

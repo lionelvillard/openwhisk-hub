@@ -68,7 +68,11 @@
     </style>
   </head>
   <body class="font-light navbar-padding">
-    {{> html/navbar endpoint='https://openwhiskhub.mybluemix.net/'}}
+    {{#if dev}}
+      {{> html/navbar endpoint='https://openwhisk.ng.bluemix.net/api/v1/web/villard@us.ibm.com_dev-test/owr/search-ui.html' }}
+    {{else}}
+      {{> html/navbar endpoint='https://openwhiskhub.mybluemix.net/'}}
+    {{/if}}
     <div class="container-fluid">
       <h2 class="text-center title">OpenWhisk Hub</h2>
       <form id="searchform" onsubmit="search(); return false">
@@ -137,7 +141,7 @@
 
       function updateSearchState() {
         if (state.hasOwnProperty('keywords')) {
-          $("#searchtext").value = state.keywords;
+          $("#searchtext").val(state.keywords);
           searchKeywords();
         }
       }
