@@ -22,7 +22,7 @@ const options = {
     batch : paths.partials,
     ignorePartials: true
   },
-  dev : true
+  dev : false
 }
 
 module.exports.paths = paths;

@@ -46,3 +46,13 @@ package:
       runtime: nodejs:6
       annotations:
         web-export: true
+    deploy:
+      location: actions/deploy/deploy.js
+      runtime: nodejs:6
+      annotations:
+        web-export: true
+    scriptdeploy:
+      location: actions/scriptdeploy/scriptdeploy.js
+      runtime: nodejs:6
+      annotations:
+        web-export: true

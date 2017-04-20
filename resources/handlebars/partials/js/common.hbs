@@ -1,5 +1,5 @@
 
-let state = {};
+var state = {};
 
 function initState() {
   // Read URL vars.
@@ -11,16 +11,18 @@ function initState() {
   }
 }
 
-let icookies = {};
+var icookies = {};
 function indexCookies() {
   if (document.cookie) {
-    let cookies = decodeURIComponent(document.cookie);
-    let ca = cookies.split(';');
+    var cookies = decodeURIComponent(document.cookie);
+    var ca = cookies.split(';');
     for  (var i = 0; i < ca.length; i++) {
-      let entry = ca[i].trim();
-      let eqi = entry.indexOf('=');
-      let key = entry.substring(0, eqi);
-      let value = entry.substring(eqi + 1);
+      var entry = ca[i].trim();
+      var eqi = entry.indexOf('=');
+      var key = entry.substring(0, eqi);
+      var value = entry.substring(eqi + 1);
+      if (key === 'bluemix')
+        value = JSON.parse(value);
       icookies[key] = value;
     }
   }

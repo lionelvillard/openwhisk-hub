@@ -33,7 +33,7 @@ function main(args) {
       
       .navbar {
         min-height:32px !important;
-        opacity: 0.8;
+        opacity: 0.9;
       }
       
       .navbar-padding {
@@ -79,10 +79,10 @@ function main(args) {
           <div class="navbar-header">
             <img class="img-openwhisk" src="http://openwhisk.org/images/apache-openwhisk.svg" alt="Apache OpenWhisk">
           </div>
-          <button id="bluemixLogin" class="btn btn-sm btn-link navbar-right hidden" onclick="loginBluemix('https://openwhisk.ng.bluemix.net/api/v1/web/villard@us.ibm.com_dev-test/owr/show.html')">Log in Bluemix</button>
+          <button id="bluemixLogin" class="btn btn-sm btn-link navbar-right hidden" onclick="loginBluemix('https://openwhiskhub.mybluemix.net/owr/show.html')">Log in Bluemix</button>
           <div id="userDropdown" class="dropdown navbar-right hidden">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <span class="fa fa-user-circle-o"></span>
+            <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="fa fa-user-circle-o" style="font-size:1.1em"></span>
             </button>
             <div class="dropdown-menu" style="width:300px">
               <div style="margin:10px">
@@ -127,14 +127,15 @@ function main(args) {
 
       </div>
       <div class="row">
-        <div class="col-xs-9" style="margin-top:10px">
-            <h2><span id="repo"></span> <small> by <span id="owner"></span></small></h2>
-            <div style="border-top:1px solid #DDDDDD" id="readme"></div>
+        <div class="col-xs-10" style="margin-top:10px">
+            <h2><span id="repo"><i class="fa fa-spinner fa-spin"></i></span> <small> by <span id="owner"><i class="fa fa-spinner fa-spin"></i></span></small></h2>
+            <div style="border-top:1px solid #DDDDDD" id="readme"><i class="fa fa-cog fa-spin fa-3x"></i></div>
 
         </div>
-        <div class="col-xs-3" style="margin-top:100px;border-left:1px solid #DDDDDD;height:200px">
-          <div style="margin-bottom:10px"><a id="viewgithub" class="btn btn-primary"><span class="fa fa-github" style="font-size:20px"></span> View on GitHub</a></div>
-          <div style="margin-bottom:10px"><button id="deploybluemix" type="button" class="btn btn-primary" onclick="deploy()" disabled>Deploy on Bluemix</button></div>
+        <div class="col-xs-2" style="margin-top:100px;border-left:1px solid #DDDDDD;height:200px">
+          <div><a id="viewgithub" class="btn btn-primary"><span class="fa fa-github" style="font-size:20px"></span> View on GitHub</a></div>
+          <div style="margin-top:10px"><button id="deploybluemix" type="button" class="btn btn-primary" onclick="deploy()" disabled>Deploy on Bluemix</button></div>
+          <div style="margin-top:10px"><button id="adddep" type="button" class="btn btn-primary" disabled>Add as Dependency</button></div>
        </div>
       </div>
     </div>
@@ -181,7 +182,7 @@ function main(args) {
 
   <script type="text/javascript">
     
-    let state = {};
+    var state = {};
     
     function initState() {
       // Read URL vars.
@@ -193,16 +194,18 @@ function main(args) {
       }
     }
     
-    let icookies = {};
+    var icookies = {};
     function indexCookies() {
       if (document.cookie) {
-        let cookies = decodeURIComponent(document.cookie);
-        let ca = cookies.split(';');
+        var cookies = decodeURIComponent(document.cookie);
+        var ca = cookies.split(';');
         for  (var i = 0; i < ca.length; i++) {
-          let entry = ca[i].trim();
-          let eqi = entry.indexOf('=');
-          let key = entry.substring(0, eqi);
-          let value = entry.substring(eqi + 1);
+          var entry = ca[i].trim();
+          var eqi = entry.indexOf('=');
+          var key = entry.substring(0, eqi);
+          var value = entry.substring(eqi + 1);
+          if (key === 'bluemix')
+            value = JSON.parse(value);
           icookies[key] = value;
         }
       }
@@ -268,20 +271,19 @@ function main(args) {
       if (icookies.hasOwnProperty('bluemix')) {
         $('#bluemixLogin').addClass('hidden');
     
-        let bm =
+        var bm =
           icookies.bluemix;
     
         $('#userName').text(bm.idRecord.name);
         $('#userID').text(bm.id);
     
-        let options = "";
-        let namespaces = bm.auths.namespaces;
+        var options = "";
+        var namespaces = bm.auths.namespaces;
         if (namespaces) {
-          for  (let i = 0; i < namespaces.length; i++) {
-            let name = namespaces[i].name;
-            let idx = name.lastIndexOf('_');
-            if (idx != -1) {
-              options += '<option>' + name.substring(idx + 1) + '</option>';
+          for  (var i = 0; i < namespaces.length; i++) {
+            var space = cfspace(namespaces[i].name);
+            if (space) {
+              options += '<option>' + space + '</option>';
             }
           }
         }
@@ -296,13 +298,41 @@ function main(args) {
       }
     }
     
+    // Extract space from namespace
+    function cfspace(name) {
+      var idx = name.lastIndexOf('_');
+      return (idx == -1) ? undefined : name.substring(idx + 1);
+    }
+    
+    function currentAuth() {
+      var selectedAuth = $('#spaceOptions').find("option:selected").text();
+      console.log('selectedAuth' + selectedAuth);
+      var namespaces = bm.auths.namespaces;
+      if (namespaces) {
+       for (var i = 0; i < namespaces.length; i++) {
+         if (space(namespaces[i].name) === selectedAuth) {
+           return namespaces[i].key;
+         }
+       }
+     }
+     return undefined;
+    }
+    
+    
+    function deploy() {
+      var auth = currentAuth();
+      if (auth) {
+        $.get('../owr/deploy.json?owner=' + encodeURIComponent(state.owner) + '&repo=' + encodeURIComponent(state.repo) + '&auth=' + encodeURIComponent(auth));
+      }
+    }
+    
     function loginBluemix(endpoint) {
       state.providerName = 'bluemix';
       state.redirect_uri = endpoint;
     
-      let url = 'http://login.ng.bluemix.net/UAALoginServerWAR/oauth/authorize';
-      let redirect_uri = encodeURIComponent('https://openwhiskhub.mybluemix.net/owr/login-redirect.http');
-      let encstate = encodeURIComponent(JSON.stringify(state));
+      var url = 'http://login.ng.bluemix.net/UAALoginServerWAR/oauth/authorize';
+      var redirect_uri = encodeURIComponent('https://openwhiskhub.mybluemix.net/owr/login-redirect.http');
+      var encstate = encodeURIComponent(JSON.stringify(state));
     
       window.location.href = url + '?client_id=openwhiskhub&response_type=code&redirect_uri=' + redirect_uri + '&state=' + encstate;
     }
@@ -314,14 +344,18 @@ function main(args) {
       updateBluemixLoginState();
     }
 
+    let manifest;
+
     function search() {
       var txt = $("#searchtext").val().trim();
       window.location.href = "../owr/search-ui.html?keywords="+txt;
       return false;
     }
 
-    function checkManifest() {
-      $.get('https://raw.githubusercontent.com/lionelvillard/openwhisk-hub/master/manifest.yaml', function(data) {
+    function refreshDeploy() {
+      let auth = currentAuth()
+      $.get('https://raw.githubusercontent.com/lionelvillard/openwhisk-hub/master/manifest.yaml', (data) => {
+        manifest = data;
         $("#deploybluemix").prop('disabled', false);
       });
     }
@@ -334,6 +368,8 @@ function main(args) {
 
         $("#readme").load('../owr/render-readme.html?repo=' + state.repo + '&owner=' + state.owner);
       };
+
+      refreshDeploy();
     }
 
     window.onload = function() {

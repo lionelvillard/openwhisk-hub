@@ -36,18 +36,19 @@
 
       </div>
       <div class="row">
-        <div class="col-xs-9" style="margin-top:10px">
+        <div class="col-xs-10" style="margin-top:10px">
           {{#if withStatic}}
             {{> static/show }}
           {{else}}
-            <h2><span id="repo"></span> <small> by <span id="owner"></span></small></h2>
-            <div style="border-top:1px solid #DDDDDD" id="readme"></div>
+            <h2><span id="repo"><i class="fa fa-spinner fa-spin"></i></span> <small> by <span id="owner"><i class="fa fa-spinner fa-spin"></i></span></small></h2>
+            <div style="border-top:1px solid #DDDDDD" id="readme"><i class="fa fa-cog fa-spin fa-3x"></i></div>
           {{/if}}
 
         </div>
-        <div class="col-xs-3" style="margin-top:100px;border-left:1px solid #DDDDDD;height:200px">
-          <div style="margin-bottom:10px"><a id="viewgithub" class="btn btn-primary"><span class="fa fa-github" style="font-size:20px"></span> View on GitHub</a></div>
-          <div style="margin-bottom:10px"><button id="deploybluemix" type="button" class="btn btn-primary" onclick="deploy()" disabled>Deploy on Bluemix</button></div>
+        <div class="col-xs-2" style="margin-top:100px;border-left:1px solid #DDDDDD;height:200px">
+          <div><a id="viewgithub" class="btn btn-primary"><span class="fa fa-github" style="font-size:20px"></span> View on GitHub</a></div>
+          <div style="margin-top:10px"><button id="deploybluemix" type="button" class="btn btn-primary" onclick="deploy()" disabled>Deploy on Bluemix</button></div>
+          <div style="margin-top:10px"><button id="adddep" type="button" class="btn btn-primary" disabled>Add as Dependency</button></div>
        </div>
       </div>
     </div>
@@ -60,14 +61,18 @@
     {{> js/publish}}
     {{> js/bluemix}}
 
+    let manifest;
+
     function search() {
       var txt = $("#searchtext").val().trim();
       window.location.href = "../owr/search-ui.html?keywords="+txt;
       return false;
     }
 
-    function checkManifest() {
-      $.get('https://raw.githubusercontent.com/lionelvillard/openwhisk-hub/master/manifest.yaml', function(data) {
+    function refreshDeploy() {
+      let auth = currentAuth()
+      $.get('https://raw.githubusercontent.com/lionelvillard/openwhisk-hub/master/manifest.yaml', (data) => {
+        manifest = data;
         $("#deploybluemix").prop('disabled', false);
       });
     }
@@ -80,6 +85,8 @@
 
         $("#readme").load('../owr/render-readme.html?repo=' + state.repo + '&owner=' + state.owner);
       };
+
+      refreshDeploy();
     }
 
     window.onload = function() {
