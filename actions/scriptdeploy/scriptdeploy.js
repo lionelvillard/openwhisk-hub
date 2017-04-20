@@ -25,8 +25,9 @@ const exec = require('child_process').exec;
 
    @param {string} args.owner             github owner
    @param {string} args.repo              github repository name
-   @param {string} args.tag               github tag/branch name. Default is master
+   @param {string} [args.tag]             github tag/branch name. Default is master
    @param {string} args.script            script to run
+   @param {string} [args.env]             script environment
 
  */
 function main(args) {
@@ -43,7 +44,7 @@ function main(args) {
 
   return fetchArchive(`http://github.com/${args.owner}/${args.repo}/archive/${tag}.zip`)
     .then( unzip )
-    .then( run(args.script, `${args.repo}-${tag}`) );
+    .then( run(args.script, args.env || {}, `${args.repo}-${tag}`) );
 }
 
 const fetchArchive = (url) => {
@@ -96,8 +97,8 @@ const unzip = (file) => {
 
 }
 
-const run = (cmd, cwd) => {
-  exec(cmd, {cwd: cwd}, (error, stdout, stderr) => {
+const run = (cmd, env, cwd) => {
+  exec(cmd, {cwd: cwd, env}, (error, stdout, stderr) => {
     if (error) {
       return Promise.reject(error);
     }
