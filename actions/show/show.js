@@ -214,31 +214,7 @@ function main(args) {
     function onLoadCommon() {
       indexCookies();
       initState();
-    
-      updateBluemixLoginState();
-    
-      $('#userDropdown').on('hide.bs.dropdown', () => {
-        $('.bootstrap-select.open').removeClass('open');
-      });
     }
-    
-    // Allow select picker to be in a dropdown
-    
-    $('.dropdown-menu').on('click', function(event) {
-    	event.stopPropagation();
-    });
-    
-    $('.selectpicker').selectpicker({
-    	container: 'body'
-    });
-    
-    $('body').on('click', function(event) {
-    	var target = $(event.target);
-    	if (target.parents('.bootstrap-select').length) {
-    		event.stopPropagation();
-    		$('.bootstrap-select.open').removeClass('open');
-    	}
-    });
     function showPublish() {
       $('#publishModal').modal('show');
     }
@@ -318,7 +294,6 @@ function main(args) {
      return undefined;
     }
     
-    
     function deploy() {
       var auth = currentAuth();
       if (auth) {
@@ -343,6 +318,33 @@ function main(args) {
     
       updateBluemixLoginState();
     }
+    
+    function onLoadBluemix() {
+      updateBluemixLoginState();
+    }
+    function onLoadNavbar() {
+      $('#userDropdown').on('hide.bs.dropdown', () => {
+        $('.bootstrap-select.open').removeClass('open');
+      });
+    }
+    
+    // Allow select picker to be in a dropdown
+    
+    $('.dropdown-menu').on('click', function(event) {
+    	event.stopPropagation();
+    });
+    
+    $('.selectpicker').selectpicker({
+    	container: 'body'
+    });
+    
+    $('body').on('click', function(event) {
+    	var target = $(event.target);
+    	if (target.parents('.bootstrap-select').length) {
+    		event.stopPropagation();
+    		$('.bootstrap-select.open').removeClass('open');
+    	}
+    });
 
     let manifest;
 
@@ -374,6 +376,8 @@ function main(args) {
 
     window.onload = function() {
       onLoadCommon();
+      onLoadBluemix();
+      onLoadNavbar();
 
       refresh();
     }

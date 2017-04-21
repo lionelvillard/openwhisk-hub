@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {{> html/head}}
+
+    <style>
+      {{> css/common }}
+    </style>
+  </head>
+  <body class="font-light">
+    <div class="container-fluid">
+      Processing....
+    </div>
+
+    {{> html/footer}}
+
+  <script type="text/javascript">
+    {{> js/common}}
+
+    window.onload = function() {
+      onLoadCommon();
+
+      var p = state.job;
+      if (p) {
+        p = decodeURIComponent(p);
+        $.get(p, function (data) {
+          console.log(data);
+        });
+      }
+    }
+  </script>
+
+  </body>
+
+
+</html>

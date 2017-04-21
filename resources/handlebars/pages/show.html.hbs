@@ -60,6 +60,7 @@
     {{> js/common}}
     {{> js/publish}}
     {{> js/bluemix}}
+    {{> js/navbar}}
 
     let manifest;
 
@@ -91,6 +92,8 @@
 
     window.onload = function() {
       onLoadCommon();
+      onLoadBluemix();
+      onLoadNavbar();
 
       refresh();
     }

@@ -6,3 +6,4 @@ hub.json
 .ptk
 build
 nginx.conf
+actions/processing/

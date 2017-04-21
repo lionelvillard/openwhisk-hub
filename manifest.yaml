@@ -51,8 +51,21 @@ package:
       runtime: nodejs:6
       annotations:
         web-export: true
-    scriptdeploy:
-      location: actions/scriptdeploy/scriptdeploy.js
+    script-deploy:
+      location: actions/script-deploy/script-deploy.js
+      runtime: nodejs:6
+    auth-invoke:
+      location: actions/auth-invoke/auth-invoke.js
+      runtime: nodejs:6
+      annotations:
+        web-export: true
+    script-deploy-bluemix:
+      location: actions/script-deploy-bluemix/script-deploy-bluemix.js
+      runtime: nodejs:6
+      annotations:
+        web-export: true
+    processing:
+      location: actions/processing/processing.js
       runtime: nodejs:6
       annotations:
         web-export: true

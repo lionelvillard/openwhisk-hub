@@ -65,7 +65,6 @@ function currentAuth() {
  return undefined;
 }
 
-
 function deploy() {
   var auth = currentAuth();
   if (auth) {
@@ -88,5 +87,9 @@ function logoutBluemix() {
   delete icookies.bluemix;
   document.cookie = "bluemix=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
+  updateBluemixLoginState();
+}
+
+function onLoadBluemix() {
   updateBluemixLoginState();
 }

@@ -114,6 +114,7 @@
       {{> js/common}}
       {{> js/bluemix}}
       {{> js/publish}}
+      {{> js/navbar}}
 
       var last;
 
@@ -148,6 +149,8 @@
 
       window.onload = function() {
         onLoadCommon();
+        onLoadBluemix();
+        onLoadNavbar();
 
         updateSearchState();
       }

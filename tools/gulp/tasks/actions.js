@@ -10,6 +10,7 @@ const bs = require('browser-sync').create();
 const pages = (example) => () => {
   let stream = page('search-ui', example);
   stream = merge(stream, page('show', example));
+  stream = merge(stream, page('processing', example));
   return stream.pipe(bs.stream());
 }
 
@@ -21,6 +22,7 @@ gulp.task('rawpages', pages(false));
 function actions() {
   let stream = action('search-ui');
   stream = merge(stream, action('show'));
+  stream = merge(stream, action('processing'));
   return stream.pipe(bs.stream());
 }
 

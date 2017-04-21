@@ -269,31 +269,7 @@ function main(args) {
       function onLoadCommon() {
         indexCookies();
         initState();
-      
-        updateBluemixLoginState();
-      
-        $('#userDropdown').on('hide.bs.dropdown', () => {
-          $('.bootstrap-select.open').removeClass('open');
-        });
       }
-      
-      // Allow select picker to be in a dropdown
-      
-      $('.dropdown-menu').on('click', function(event) {
-      	event.stopPropagation();
-      });
-      
-      $('.selectpicker').selectpicker({
-      	container: 'body'
-      });
-      
-      $('body').on('click', function(event) {
-      	var target = $(event.target);
-      	if (target.parents('.bootstrap-select').length) {
-      		event.stopPropagation();
-      		$('.bootstrap-select.open').removeClass('open');
-      	}
-      });
       
       function updateBluemixLoginState() {
         if (icookies.hasOwnProperty('bluemix')) {
@@ -346,7 +322,6 @@ function main(args) {
        return undefined;
       }
       
-      
       function deploy() {
         var auth = currentAuth();
         if (auth) {
@@ -369,6 +344,10 @@ function main(args) {
         delete icookies.bluemix;
         document.cookie = "bluemix=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
       
+        updateBluemixLoginState();
+      }
+      
+      function onLoadBluemix() {
         updateBluemixLoginState();
       }
       function showPublish() {
@@ -398,6 +377,29 @@ function main(args) {
         }
         return false;
       }
+      function onLoadNavbar() {
+        $('#userDropdown').on('hide.bs.dropdown', () => {
+          $('.bootstrap-select.open').removeClass('open');
+        });
+      }
+      
+      // Allow select picker to be in a dropdown
+      
+      $('.dropdown-menu').on('click', function(event) {
+      	event.stopPropagation();
+      });
+      
+      $('.selectpicker').selectpicker({
+      	container: 'body'
+      });
+      
+      $('body').on('click', function(event) {
+      	var target = $(event.target);
+      	if (target.parents('.bootstrap-select').length) {
+      		event.stopPropagation();
+      		$('.bootstrap-select.open').removeClass('open');
+      	}
+      });
 
       var last;
 
@@ -432,6 +434,8 @@ function main(args) {
 
       window.onload = function() {
         onLoadCommon();
+        onLoadBluemix();
+        onLoadNavbar();
 
         updateSearchState();
       }
