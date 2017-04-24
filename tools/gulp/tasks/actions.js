@@ -8,9 +8,9 @@ const bs = require('browser-sync').create();
 
 
 const pages = (example) => () => {
-  let stream = page('search-ui', example);
-  stream = merge(stream, page('show', example));
-  stream = merge(stream, page('processing', example));
+  let stream = page(config.paths.publicactions, 'search-ui', example);
+  stream = merge(stream, page(config.paths.publicactions, 'show', example));
+  stream = merge(stream, page(config.paths.publicactions, 'processing', example));
   return stream.pipe(bs.stream());
 }
 
@@ -20,27 +20,27 @@ gulp.task('pages', pages(true));
 gulp.task('rawpages', pages(false));
 
 function actions() {
-  let stream = action('search-ui');
-  stream = merge(stream, action('show'));
-  stream = merge(stream, action('processing'));
+  let stream = action(config.paths.publicactions, 'search-ui');
+  stream = merge(stream, action(config.paths.publicactions, 'show'));
+  stream = merge(stream, action(config.paths.publicactions, 'processing'));
   return stream.pipe(bs.stream());
 }
 
-function page(name, example) {
+function page(actionpath, name, example) {
   let suffix = '';
   if (example)
     suffix = '-demo';
   return gulp.src(`${config.paths.handlebars}/pages/${name}.html.hbs`)
       .pipe(handlebars({withStatic: example, dev:config.options.dev}, config.options.handlebars))
       .pipe(rename(`${name}${suffix}.html`))
-      .pipe(gulp.dest(`${config.paths.actions}/${name}`));
+      .pipe(gulp.dest(`${actionpath}/${name}`));
 }
 
-function action(name) {
+function action(actionpath, name) {
   return gulp.src(`${config.paths.handlebars}/nodejs/wrapper-action.js.hbs`)
-      .pipe(handlebars({html: escape(fs.readFileSync(`${config.paths.actions}/${name}/${name}.html`))}, config.options.handlebars))
+      .pipe(handlebars({html: escape(fs.readFileSync(`${actionpath}/${name}/${name}.html`))}, config.options.handlebars))
       .pipe(rename(`${name}.js`))
-      .pipe(gulp.dest(`${config.paths.actions}/${name}`));
+      .pipe(gulp.dest(`${actionpath}/${name}`));
 }
 
 function escape(str) {

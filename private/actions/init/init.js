@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-/* Initialize OpenWhisk Cloudant Registry
+/*
+  Initialize OpenWhisk Cloudant Registry
 
-   Input:
-     host       where the cloudant service is located
-     username
-     password
-
-   or
-     url
+  @param {string} [args.host]       where the cloudant service is located
+  @param {string} [args.username]
+  @param {string} [args.password]
+  @param {string} [args.url]       full DB url. If specified, the other input parameters are ignored.
  */
 
 var openwhisk = require('openwhisk');

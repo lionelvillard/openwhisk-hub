@@ -6,4 +6,9 @@ hub.json
 .ptk
 build
 nginx.conf
-actions/processing/
+public/actions/processing
+public/actions/search-ui
+public/actions/show
+packages/openwhisk-oauth
+config_*.sh
+packages/openwhisk-wskdeploy/exec

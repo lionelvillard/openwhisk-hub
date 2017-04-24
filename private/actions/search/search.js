@@ -15,11 +15,11 @@
  */
 
 /*
-   Search for packages from list of keywords
-   Input:
-     dburl       where the cloudant service is located
-     dbname     the name of the database containing the registry
-     keywords   space-separated list of keywords
+  Search for packages from list of keywords
+
+  @param {string} arg.dburl  where the cloudant service is located
+  @param {string} dbname     the name of the database containing the registry
+  @param {string} keywords   space-separated list of keywords
 */
 var openwhisk = require('openwhisk');
 var url = require('url');
@@ -62,7 +62,7 @@ function main(args) {
       }
 
       // TODO: should return a JSON object.
-      // TODO: package name should not be hardcoded 
+      // TODO: package name should not be hardcoded
 
       html += `
           <div class="list-group-item well container hvr-glow entry">

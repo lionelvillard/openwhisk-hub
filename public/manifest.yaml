@@ -1,7 +1,7 @@
 package:
   name: owr
   version: 0.0.1
-  description: Experimental OpenWhisk Registry
+  description: Experimental OpenWhisk Registry (Public)
   license: Apache-2.0
   repositories:
     - url: http://github.com/lionelvillard/openwhisk-hub
@@ -9,23 +9,6 @@ package:
     oauth:
       location: http://github.com/starpit/openwhisk-oauth
   actions:
-    init:
-      location: actions/init/init.js
-      runtime: nodejs:6
-    publish:
-      location: actions/publish/publish.js
-      runtime: nodejs:6
-      inputs:
-        dburl : $DBURL
-        dbname : openwhisk
-    search:
-      location: actions/search/search.js
-      runtime: nodejs:6
-      inputs:
-        dburl : $DBURL
-        dbname : openwhisk
-      annotations:
-        web-export: true
     search-ui:
       location: actions/search-ui/search-ui.js
       runtime: nodejs:6
@@ -38,6 +21,11 @@ package:
         web-export: true
     login-redirect:
       location: actions/login-redirect/login-redirect.js
+      runtime: nodejs:6
+      annotations:
+        web-export: true
+    processing:
+      location: actions/processing/processing.js
       runtime: nodejs:6
       annotations:
         web-export: true
@@ -64,8 +52,11 @@ package:
       runtime: nodejs:6
       annotations:
         web-export: true
-    processing:
-      location: actions/processing/processing.js
+    api-keys:
+      location: actions/api-keys/api-keys.js
       runtime: nodejs:6
+  sequences:
+    search:
+      actions: /whisk.system/utils/echo,/owr-backend/search
       annotations:
         web-export: true

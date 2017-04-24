@@ -1,0 +1,13 @@
+application:
+  name: openwhisk-hub
+  version: 0.0.1
+  packages:
+    owr:
+      location: public
+    owr-backend:
+      location: private
+  dependencies:
+    oauth:
+      location: http://github.com/starpit/openwhisk-oauth
+    github:
+      location: http://github.com/lionelvillard/openwhisk-github

@@ -1,0 +1,23 @@
+package:
+  name: owr-backend
+  version: 0.0.1
+  description: Experimental OpenWhisk Registry (Private)
+  license: Apache-2.0
+  repositories:
+    - url: http://github.com/lionelvillard/openwhisk-hub
+  actions:
+    init:
+      location: actions/init/init.js
+      runtime: nodejs:6
+    publish:
+      location: actions/publish/publish.js
+      runtime: nodejs:6
+      inputs:
+        dburl : $DBURL
+        dbname : openwhisk
+    search:
+      location: actions/search/search.js
+      runtime: nodejs:6
+      inputs:
+        dburl : $DBURL
+        dbname : openwhisk

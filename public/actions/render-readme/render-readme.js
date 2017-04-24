@@ -15,10 +15,10 @@
  */
 
 /*
-   Fetch github readme and render as HTML
-   Input:
-    owner      github owner
-    repo       github repository
+  Fetch github readme and render as HTML
+
+  @param {string} args.owner      github owner
+  @param {string} args.repo       github repository
 */
 
 var openwhisk = require('openwhisk');
