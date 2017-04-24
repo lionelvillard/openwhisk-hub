@@ -18,55 +18,17 @@ const openwhisk = require('openwhisk');
 const https = require('https');
 const querystring = require('querystring');
 
-/* Redirect from oauth. */
+/*
+  Redirect from oauth.
+
+  @param
+    */
 function main(params) {
   let ow = openwhisk();
   // Got the code. Now needs to get the access token
   return ow.actions.invoke({actionName:'/villard@us.ibm.com_dev/oauth/login', params, blocking:true})
          .then( result => {
-           return new Promise((resolve, reject) => {
-             let params = result.response.result;
-
-             let postData = JSON.stringify({
-               accessToken  : params.access_token,
-               refreshToken : params.access_token_body.refresh_token
-             });
-
-             let postOptions = {
-               host: 'openwhisk.ng.bluemix.net',
-               path: '/bluemix/v1/authenticate',
-               method: 'POST',
-               headers: {
-                 'Content-Type': 'application/json',
-                 'Content-Length': Buffer.byteLength(postData)
-               }
-             };
-
-             let req = https.request(postOptions, res => {
-               res.setEncoding('utf8');
-               let data = '';
-               res.on('data', chunk => {
-                 data += chunk;
-               });
-               res.on('end', () => {
-                 let owkeys = JSON.parse(data);
-
-                 params.auths = owkeys;
-
-                 resolve(redirect(params));
-               });
-
-             });
-
-             req.on('error', e => {
-               console.log(`problem with request: ${e.message}`);
-               resolve(redirect(params));
-             });
-
-             req.write(postData);
-             req.end();
-
-           }).catch( err => err);
+           return redirect(result.response.result);
          })
          .catch( err => err );
 }
@@ -82,9 +44,9 @@ function redirect(params) {
   const cookie = {
     provider: params.provider,
     access_token: params.access_token,
+    refresh_token: params.access_token_body.refresh_token,
     id: params.id,
-    idRecord: params.idRecord,
-    auths: params.auths
+    idRecord: params.idRecord
   }
   payload.headers["Set-Cookie"] = `bluemix=${JSON.stringify(cookie)}; Path=/;`
 

@@ -20,8 +20,8 @@ const https = require('https');
 /*
   Retrieve OpenWhisk api keys for given access token
 
-  @param {string} args.access_token        authorization token
-  @param {string} args.refresh_token       refresh token
+  @param {string} args.access_token   authorization token
+  @param {string} args.refresh_token  refresh token
 */
 function main(args) {
   if (!args.hasOwnProperty('access_token'))

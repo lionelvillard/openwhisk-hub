@@ -55,8 +55,10 @@ package:
     api-keys:
       location: actions/api-keys/api-keys.js
       runtime: nodejs:6
-  sequences:
-    search:
-      actions: /whisk.system/utils/echo,/owr-backend/search
       annotations:
         web-export: true
+#  sequences:
+#    search:
+#      actions: /whisk.system/utils/echo,owr-backend/search
+#      annotations:
+#        web-export: true

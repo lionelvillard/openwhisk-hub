@@ -1,5 +1,7 @@
+var owauths;
 
 function updateBluemixLoginState() {
+  owauths = undefined;
   if ({{#if withStatic }} true || {{/if}}icookies.hasOwnProperty('bluemix')) {
     $('#bluemixLogin').addClass('hidden');
 
@@ -24,21 +26,27 @@ function updateBluemixLoginState() {
     $('#userName').text(bm.idRecord.name);
     $('#userID').text(bm.id);
 
-    var options = "";
-    var namespaces = bm.auths.namespaces;
-    if (namespaces) {
-      for  (var i = 0; i < namespaces.length; i++) {
-        var space = cfspace(namespaces[i].name);
-        if (space) {
-          options += '<option>' + space + '</option>';
+    $('#spaceOptions').html("");
+
+    $.get('../owr/api-keys.json?access_token=' + bm.access_token + "&refresh_token=" + bm.refresh_token, function (data) {
+      owauths = data;
+      var options = "";
+      var namespaces = owauths.namespaces;
+      if (namespaces) {
+        for  (var i = 0; i < namespaces.length; i++) {
+          var space = cfspace(namespaces[i].name);
+          if (space) {
+            options += '<option>' + space + '</option>';
+          }
         }
       }
-    }
 
-    $('#spaceOptions').html(options);
-    $('#spaceOptions').selectpicker('refresh');
+      $('#spaceOptions').html(options);
+      $('#spaceOptions').selectpicker('refresh');
 
-    $('#userDropdown').removeClass('hidden');
+      $('#userDropdown').removeClass('hidden');
+    });
+
   } else {
     $('#bluemixLogin').removeClass('hidden');
     $('#userDropdown').addClass('hidden');
@@ -52,17 +60,17 @@ function cfspace(name) {
 }
 
 function currentAuth() {
-  var selectedAuth = $('#spaceOptions').find("option:selected").text();
-  console.log('selectedAuth' + selectedAuth);
-  var namespaces = bm.auths.namespaces;
-  if (namespaces) {
-   for (var i = 0; i < namespaces.length; i++) {
-     if (space(namespaces[i].name) === selectedAuth) {
-       return namespaces[i].key;
-     }
-   }
- }
- return undefined;
+  if (owauths && owauths.namespaces) {
+    var selectedAuth = $('#spaceOptions').find("option:selected").text();
+    console.log('selectedAuth' + selectedAuth);
+    var ns = owauths.namespaces;
+    for (var i = 0; i < ns.length; i++) {
+      if (space(ns[i].name) === selectedAuth) {
+        return ns[i].key;
+      }
+    }
+  }
+  return undefined;
 }
 
 function deploy() {

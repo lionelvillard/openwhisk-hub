@@ -17,9 +17,9 @@
 /*
   Search for packages from list of keywords
 
-  @param {string} arg.dburl  where the cloudant service is located
-  @param {string} dbname     the name of the database containing the registry
-  @param {string} keywords   space-separated list of keywords
+  @param {string} args.dburl    where the cloudant service is located
+  @param {string} args.dbname   the name of the database containing the registry
+  @param {string} args.keywords space-separated list of keywords
 */
 var openwhisk = require('openwhisk');
 var url = require('url');
