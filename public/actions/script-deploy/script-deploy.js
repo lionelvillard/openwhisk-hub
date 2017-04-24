@@ -45,7 +45,6 @@ function main(args) {
     .catch( err => ({ error: err }) );
 }
 
-
 const fetchArchive = (url) => {
   console.log('fetchArchive');
   return new Promise((resolve, reject) => {

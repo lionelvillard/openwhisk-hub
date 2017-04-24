@@ -52,7 +52,7 @@ function main(args) {
 var getRepo = (ow, owner, repo) => {
   return ow.actions.call(
     {
-      actionName: '/villard@us.ibm.com_dev/github/getRepo',
+      actionName: '/_/github/getRepo',
       params: {
         owner     : owner,
         repo      : repo,

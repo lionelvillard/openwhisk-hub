@@ -19,6 +19,7 @@
 /*
   Execute action using auth key
 
+  @param {string} args.__ow_headers headers created by login-redirect.
   @param {string} args.name         action name.
   @param {string} [args.params]     action parameters. Default is '{}'.
   @param {string} [args.space]      Bluemix space corresponding to authorization key. Default is first on in the list.
@@ -37,10 +38,26 @@ function main(args) {
     return { error: "Missing bluemix credentials" };
 
   let bluemix = cookies.bluemix;
-  if (!bluemix.hasOwnProperty('auths') || bluemix.auths.namespaces.length == 0)
-    return { error: "Missing OpenWhisk authorization keys" };
 
-  let namespaces = bluemix.auths.namespaces;
+  let anonymous = openwhisk();
+  return apiKeys(anonymous, bluemix.access_token, bluemix.refresh_token)
+    .then( authInvoke(args) );
+}
+
+const apiKeys = (ow, accessToken, refreshToken) => {
+  return ow.actions.invoke({
+    actionName: '/_/owr/api-keys',
+    params: {
+        access_token: accessToken,
+        refresh_token: refreshToken
+    },
+    blocking: true
+  });
+}
+
+const authInvoke = (args) => (result) => {
+  let auths = result.response.result;
+  let namespaces = auths.namespaces;
   let auth = namespaces[0].key;
   if (args.space) {
     for (const ns of namespaces) {

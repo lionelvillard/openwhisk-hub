@@ -27,7 +27,7 @@ function main(args) {
   if (!args.hasOwnProperty('access_token'))
     return { error: "Missing argument 'access_token'." };
 
-  if (!args.hasOwnProperty('access_token'))
+  if (!args.hasOwnProperty('refresh_token'))
     return { error: "Missing argument 'refresh_token'." };
 
   return new Promise((resolve, reject) => {
