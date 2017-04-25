@@ -17,9 +17,9 @@
  const openwhisk = require('openwhisk');
 
 /*
-  Execute action using auth key
+  Execute non-blocking action using the given OW API key.
 
-  @param {string} args.__ow_headers headers created by login-redirect.
+  @param {string} args.__ow_headers headers with OAuth created by login-redirect.
   @param {string} args.name         action name.
   @param {string} [args.params]     action parameters. Default is '{}'.
   @param {string} [args.space]      Bluemix space corresponding to authorization key. Default is first on in the list.
@@ -27,7 +27,7 @@
 */
 function main(args) {
   if (!args.hasOwnProperty('name'))
-    return { error: "Missing argument 'name' (action name)"} ;
+    return { error: "Missing argument 'name' (action name)"};
 
   let headers = args.__ow_headers;
   if (!headers.hasOwnProperty('cookie'))
@@ -75,15 +75,11 @@ const authInvoke = (args) => (result) => {
     api_key: auth
   });
 
-  let params = args.params;
-  if (params) {
-    params = JSON.parse(params);
-  } else {
-    params = {};
-  }
+  let params = args.params ? JSON.parse(args.params) : {};
   return ow.actions.invoke({
     actionName: args.name,
-    params
+    params,
+    blocking: true
   });
 }
 

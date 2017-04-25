@@ -23,9 +23,7 @@
       var p = state.job;
       if (p) {
         p = decodeURIComponent(p);
-        $.get(p, function (data) {
-          console.log(data);
-        });
+        $('body').load(p);
       }
     }
   </script>

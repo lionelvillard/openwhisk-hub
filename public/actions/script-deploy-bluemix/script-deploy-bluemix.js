@@ -19,6 +19,7 @@ const _ = require('lodash');
 /*
   Login to bluemix and deploy by running arbitrary script
 
+  @param {string} args.__ow_headers      headers with OAuth created by login-redirect.
   @param {string} args.owner             github owner
   @param {string} args.repo              github repository name
   @param {string} [args.space]           Bluemix space to use for deployment. Default is the first one of all received spaces
@@ -29,12 +30,12 @@ const _ = require('lodash');
 function main(args) {
   let params = _.pick(args, ['owner', 'repo', 'tag', 'script', 'env']);
 
-  let query = 'name=' + encodeURIComponent('/villard@us.ibm.com_dev/owr/script-deploy') + '&params=' + encodeURIComponent(JSON.stringify(params));
+  let query = 'name=' + encodeURIComponent('/_/owr/script-deploy') + '&params=' + encodeURIComponent(JSON.stringify(params));
 
   if (args.space)
     query += '&space=' + encodeURIComponent(args.space);
 
-  let job = encodeURIComponent(`https://openwhiskhub.mybluemix.net/owr/auth-invoke?${query}`);
+  let job = encodeURIComponent(`https://openwhiskhub.mybluemix.net/owr/auth-invoke.json?${query}`);
 
   let state = encodeURIComponent(JSON.stringify({
     providerName: 'bluemix',
