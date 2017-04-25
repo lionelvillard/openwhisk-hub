@@ -30,7 +30,7 @@ const _ = require('lodash');
 function main(args) {
   let params = _.pick(args, ['owner', 'repo', 'tag', 'script', 'env']);
 
-  let query = 'name=' + encodeURIComponent('/_/owr/script-deploy') + '&params=' + encodeURIComponent(JSON.stringify(params));
+  let query = 'name=' + encodeURIComponent('/villard@us.ibm.com_dev/owr/script-deploy') + '&params=' + encodeURIComponent(JSON.stringify(params));
 
   if (args.space)
     query += '&space=' + encodeURIComponent(args.space);
